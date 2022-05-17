@@ -13,9 +13,14 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 
 urlpatterns = [
+    path('', include('inventory_management.urls')),
     path('admin/', admin.site.urls),
 ]
+
+handler404 = 'inventory_management.views.page_not_found_view'
+handler500 = 'inventory_management.views.page_error'

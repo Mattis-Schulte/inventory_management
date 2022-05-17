@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Übersicht – SZUT Inventur Management</title>
+    <link rel="icon" href="{% static 'images/szut-logo.jpg' %}" type="image/jpg" sizes="16x16">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+</head>
+<body>
+    <nav>
+        <div class="nav-top-bar">
+            <div class="logo-name">
+                <img src="{% static 'images/szut-logo.jpg' %}" alt="logo">
+                <p>SZUT Inventur Management</p>
+            </div>
+            <div class="search">
+                <form action="">
+                    <input type="text" name="search" placeholder="Suche nach Räumen, Geräten und Tickets ...">
+                </form>
+            </div>
+            <div class="login">Anmelden<i class="bi bi-chevron-compact-down"></i></div>
+        </div>
+        <div class="nav-side-bar">
+            <ul>
+                <li><a href="../overview/">Übersicht</a></li>
+                <li><a href="../rooms/">Räume</a></li>
+                <li><a href="../devices/">Geräte</a></li>
+                <li><a href="../ticket-management/">Ticket-System</a></li>
+            </ul>
+        </div>
+    </nav>
+</body>
+</html>
