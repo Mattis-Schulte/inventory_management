@@ -10,3 +10,7 @@
   word-break: break-word;
   hyphens: manual;
 }
+
+body {
+  background-color: #f8f8f8;
+}
