@@ -12,44 +12,49 @@
     <script src="{% static 'js/main.js' %}"></script>
 </head>
 <body>
-    <nav class="global-nav">
-        <div class="top-bar-content">
-            <ul class="top-bar-header">
-                <li class="logo-name">
-                    <img src="{% static 'images/szut-logo.jpg' %}" alt="logo">
-                    <p>SZUT Inventur Management</p>
-                </li>
-                <li class="search">
-                    <form action="">
-                        <input type="text" name="search" placeholder="Suche nach Räumen, Geräten und Tickets ...">
-                    </form>
-                </li>
-                <li class="login">
-                    <p>Anmelden<i class="bi bi-chevron-compact-down"></i></p>
-                    <form action="../login/" method="post">
-                        {% csrf_token %}
-                        <input type="text" name="username" placeholder="Benutzername">
-                        <input type="password" name="password" placeholder="Passwort">
-                        <input type="submit" value="Login">
-                    </form>
-                </li>
-            </ul>
-        </div>
-        <div class="nav-side-bar">
-            <ul>
-                <li><a href="../overview/" onclick="loadAjaxContent('overview');return false">Übersicht</a></li>
-                <li><a href="../rooms/" onclick="loadAjaxContent('rooms');return false">Räume</a></li>
-                <li><a href="../devices/" onclick="loadAjaxContent('devices');return false">Geräte</a></li>
-                <li><a href="../ticket-management/" onclick="loadAjaxContent('ticket-management');return false">Ticket-System</a></li>
-            </ul>
-        </div>
+    <nav class="top-bar-content">
+        <ul class="top-bar-header">
+            <li class="logo-name">
+                <img src="{% static 'images/szut-logo.jpg' %}" alt="logo">
+                <h1>SZUT Inventur</h1>
+            </li>
+            <li class="search">
+                <form action="">
+                    <i class="bi bi-search"></i>
+                    <input type="search" name="q" placeholder="Suche nach Räumen, Geräten und Tickets ...">
+                </form>
+            </li>
+            <li class="login">
+                <p>Anmelden <i class="bi bi-chevron-down"></i></p>
+                <form id="login_form" class="login_form" action="../account/" method="post" style="// display: none;">
+                    {% csrf_token %}
+                    <input type="text" name="username" placeholder="Benutzername">
+                    <input type="password" name="password" placeholder="Passwort">
+                    <input type="submit" value="Login">
+                </form>
+            </li>
+        </ul>
     </nav>
-    <div id="load-content-error" style="display: none;">
-        <p>Ein Fehler ist aufgetreten!</p>
-    </div>
-    <!-- Reserved section -->
-    <main id="page-content" class="page-content">
-        {% if current_page_file|template_exists %}{% include current_page_file %}{% else %}<script>loadContentError();</script>{% endif %}
+    <main class="main-area-wrapper">
+        <nav class="nav-side-bar">
+            <div class="nav-side-bar-content">
+                <ul>
+                    <li><a href="../overview/" onclick="loadAjaxContent('overview');return false">Übersicht</a></li>
+                    <li><a href="../rooms/" onclick="loadAjaxContent('rooms');return false">Räume</a></li>
+                    <li><a href="../devices/" onclick="loadAjaxContent('devices');return false">Geräte</a></li>
+                    <li><a href="../ticket-management/" onclick="loadAjaxContent('ticket-management');return false">Ticket-System</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="main-content-wrapper">
+            <div id="load-content-error" style="display: none;">
+                <p>Ein Fehler ist aufgetreten!</p>
+            </div>
+
+            <div id="page-content" class="page-content">
+                {% if current_page_file|template_exists %}{% include current_page_file %}{% else %}<script>loadContentError();</script>{% endif %}
+            </div>
+        </div>
     </main>
 </body>
 </html>

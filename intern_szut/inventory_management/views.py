@@ -32,16 +32,20 @@ def ticket_management(request):
     else:
         return render(request, 'index.html', {'current_page': 'ticket_management', 'current_page_file': 'ticket_management.html'})
 
-def login(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        if verify_login.VerifyLogin.get_sessionid(username, password):
-            return redirect('overview')
+def account(request):
+    if request.method == 'POST' and request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+        access_token = verify_login.VerifyLogin.get_access_token(request.POST['username'], request.POST['password'])
+        if access_token:
+            user_role = verify_login.VerifyLogin.get_user_role(access_token)
+            user_data = verify_login.VerifyLogin.get_user_data(access_token)
+            response = HttpResponse(f'User data: {user_data}, User role: {user_role}')
+            return response
         else:
-            return HttpResponse(status=403)
+            return HttpResponse('{"ErrorCode":"InvalidUser"}')
+    elif request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+        return render(request, 'account.html')
     else:
-        return HttpResponse(status=403)
+        return render(request, 'index.html', {'current_page': 'account', 'current_page_file': 'account.html'})
 
 def page_not_found_view(request, exception):
     # If request is ajax
