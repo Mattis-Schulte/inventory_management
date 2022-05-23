@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from . import verify_login
 
 
 def index(request):
@@ -30,6 +31,17 @@ def ticket_management(request):
         return render(request, 'ticket_management.html')
     else:
         return render(request, 'index.html', {'current_page': 'ticket_management', 'current_page_file': 'ticket_management.html'})
+
+def login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        if verify_login.VerifyLogin.get_sessionid(username, password):
+            return redirect('overview')
+        else:
+            return HttpResponse(status=403)
+    else:
+        return HttpResponse(status=403)
 
 def page_not_found_view(request, exception):
     # If request is ajax

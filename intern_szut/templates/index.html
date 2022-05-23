@@ -4,6 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SZUT Inventur Management</title>
     <link rel="icon" href="{% static 'images/szut-logo.jpg' %}" type="image/jpg" sizes="16x16">
     <link rel="stylesheet" href="{% static 'css/main.css' %}" />
@@ -11,18 +12,28 @@
     <script src="{% static 'js/main.js' %}"></script>
 </head>
 <body>
-    <nav>
-        <div class="nav-top-bar">
-            <div class="logo-name">
-                <img src="{% static 'images/szut-logo.jpg' %}" alt="logo">
-                <p>SZUT Inventur Management</p>
-            </div>
-            <div class="search">
-                <form action="">
-                    <input type="text" name="search" placeholder="Suche nach Räumen, Geräten und Tickets ...">
-                </form>
-            </div>
-            <div class="login">Anmelden<i class="bi bi-chevron-compact-down"></i></div>
+    <nav class="global-nav">
+        <div class="top-bar-content">
+            <ul class="top-bar-header">
+                <li class="logo-name">
+                    <img src="{% static 'images/szut-logo.jpg' %}" alt="logo">
+                    <p>SZUT Inventur Management</p>
+                </li>
+                <li class="search">
+                    <form action="">
+                        <input type="text" name="search" placeholder="Suche nach Räumen, Geräten und Tickets ...">
+                    </form>
+                </li>
+                <li class="login">
+                    <p>Anmelden<i class="bi bi-chevron-compact-down"></i></p>
+                    <form action="../login/" method="post">
+                        {% csrf_token %}
+                        <input type="text" name="username" placeholder="Benutzername">
+                        <input type="password" name="password" placeholder="Passwort">
+                        <input type="submit" value="Login">
+                    </form>
+                </li>
+            </ul>
         </div>
         <div class="nav-side-bar">
             <ul>
@@ -37,7 +48,7 @@
         <p>Ein Fehler ist aufgetreten!</p>
     </div>
     <!-- Reserved section -->
-    <main id="page-content" >
+    <main id="page-content" class="page-content">
         {% if current_page_file|template_exists %}{% include current_page_file %}{% else %}<script>loadContentError();</script>{% endif %}
     </main>
 </body>
