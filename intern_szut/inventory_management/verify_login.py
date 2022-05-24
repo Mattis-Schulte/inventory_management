@@ -28,13 +28,18 @@ class VerifyLogin:
             header = {'User-Agent': 'itslearningintapp/3.5 (com.itslearning.itslearningintapp; build:22; iOS 15.4.1) Alamofire/3.5', 'Accept-Encoding': 'gzip, deflate'}
             req = request.Request(f'{cls.domain}restapi/personal/person/v1?access_token={access_token}', headers=header)
             response_data = decompress(request.urlopen(req).read()).decode('utf-8')
+            if findall(r'"Use12HTimeFormat":true', response_data):
+                use12h_time_format = True
+            else:
+                use12h_time_format = False
+
             user_data = {
                 'PersonId': int(findall(r'"PersonId":(.*?),', response_data)[0]),
                 'FirstName': str(findall(r'"FirstName":"(.*?)"', response_data)[0]),
                 'LastName': str(findall(r'"LastName":"(.*?)"', response_data)[0]),
                 'Language': str(findall(r'"Language":"(.*?)"', response_data)[0]),
                 'ProfileImageUrl': str(findall(r'"ProfileImageUrl":"(.*?)"', response_data)[0]),
-                'Use12HTimeFormat': bool(findall(r'"Use12HTimeFormat":(.*?)', response_data)[0]),
+                'Use12HTimeFormat': use12h_time_format,
                 'FullName': str(findall(r'"FullName":"(.*?)"', response_data)[0])
             }
             return user_data
