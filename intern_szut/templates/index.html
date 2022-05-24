@@ -14,7 +14,7 @@
 <body>
     <nav class="top-bar-content">
         <div class="top-bar-header">
-            <a class="logo-name" href="/overview" onclick="loadAjaxContent('overview');return false">
+            <a class="logo-name" href="/overview/" onclick="loadAjaxContent('overview');return false">
                 <img src="{% static 'images/szut-logo.jpg' %}" alt="logo">
                 <h1>SZUT Inventur</h1>
             </a>
@@ -28,7 +28,7 @@
                 <div class="top-bar-login" tabindex="0" role="button" aria-pressed="false">
                     <p>Anmelden <i class="bi bi-chevron-down"></i></p>
                 </div>
-                <form id="login-form" class="login-form" action="/account/login/" method="post" style="// display: none;">
+                <form id="login-form" class="login-form" action="/account/login/" method="post" style="">
                     {% csrf_token %}
                     <input type="text" name="username" placeholder="Benutzername">
                     <input type="password" name="password" placeholder="Passwort">
@@ -40,11 +40,11 @@
     <main class="main-area-wrapper">
         <nav class="nav-side-bar">
             <ul>
-                <li><a id="overview" href="/overview" onclick="loadAjaxContent('overview');return false"><i class="bi bi-file-earmark-post"></i> Übersicht</a></li>
-                <li><a id="rooms" href="/rooms" onclick="loadAjaxContent('rooms');return false"><i class="bi bi-house-fill"></i> Räume</a></li>
-                <li><a id="devices" href="/devices/" onclick="loadAjaxContent('devices');return false"><i class="bi bi-pc-display"></i> Geräte</a></li>
-                <li><a id="ticket-management" href="/ticket-management" onclick="loadAjaxContent('ticket-management');return false"><i class="bi bi-ticket-fill"></i> Ticket-System</a></li>
-                <li><a id="account" href="/account" onclick="loadAjaxContent('account');return false"><i class="bi bi-person-lines-fill"></i> Account</a></li>
+                <li><a id="overview" href="/overview/" onclick="loadAjaxContent('overview');return false"><i class="bi bi-file-earmark-post"></i>Übersicht</a></li>
+                <li><a id="rooms" href="/rooms/" onclick="loadAjaxContent('rooms');return false"><i class="bi bi-house-fill"></i>Räume</a></li>
+                <li><a id="devices" href="/devices/" onclick="loadAjaxContent('devices');return false"><i class="bi bi-pc-display"></i>Geräte</a></li>
+                <li><a id="ticket-management" href="/ticket-management/" onclick="loadAjaxContent('ticket-management');return false"><i class="bi bi-ticket-fill"></i>Ticket-System</a></li>
+                <li><a id="account" href="/account/" onclick="loadAjaxContent('account');return false"><i class="bi bi-person-lines-fill"></i>Account</a></li>
             </ul>
         </nav>
         <div class="main-content-wrapper">
