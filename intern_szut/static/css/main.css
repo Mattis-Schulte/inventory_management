@@ -10,6 +10,9 @@
   --text-color-tertiary: #e0e0e0;
   --top-bar-height: 3.4rem;
   --top-bar-inner-margin: calc(var(--top-bar-height) / 8);
+  --side-nav-width: 28%;
+  --side-nav-min-width: 260px;
+  --side-nav-max-width: 300px;
 }
 
 * {
@@ -23,10 +26,10 @@
   color: var(--text-color-secondary);
 }
 
-body {
+html, body {
   background-color: var(--background-color);
+  height: 100%;
   overflow: hidden;
-  height: 100vh;
 }
 
 a {
@@ -58,11 +61,10 @@ a {
   display: flex;
   flex-direction: row;
   align-items: center;
-  flex-basis: 12.5%;
-  min-width: 260px;
-  border-right: 1px solid var(--text-color-tertiary);
-  margin: var(--top-bar-inner-margin);
-  padding-right: var(--top-bar-inner-margin);
+  flex-basis: var(--side-nav-width);
+  min-width: var(--side-nav-min-width);
+  max-width: var(--side-nav-max-width);
+  padding: var(--top-bar-inner-margin);
 }
 
 .logo-name img {
@@ -84,7 +86,10 @@ a {
   flex: 1 1 auto;
   align-items: center;
   border-right: 1px solid var(--text-color-tertiary);
-  margin: var(--top-bar-inner-margin);
+  margin: var(--top-bar-inner-margin) 0;
+  padding: 0 var(--top-bar-inner-margin);
+  border-left: 1px solid var(--text-color-tertiary);
+  border-right: 1px solid var(--text-color-tertiary);
 }
 
 .search form {
@@ -97,7 +102,7 @@ a {
 .search input {
   width: 100%;
   align-self: center;
-  margin:  0 calc(var(--top-bar-inner-margin) * 2) 0 calc(var(--top-bar-inner-margin) * 2);
+  margin:  0 calc(var(--top-bar-inner-margin) * 2);
   border: none;
   background-color: transparent;
   resize: none;
@@ -105,11 +110,19 @@ a {
 }
 
 .login {
-  align-self: center;
-  margin: 0 calc(var(--top-bar-inner-margin) * 2) 0 var(--top-bar-inner-margin);
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
 }
 
-.login p, .login p i {
+.top-bar-login {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 calc(var(--top-bar-inner-margin) * 2)
+}
+
+.top-bar-login p, .top-bar-login p i {
   color: var(--text-color-primary);
   white-space: nowrap;
 }
@@ -133,16 +146,17 @@ a {
   top: var(--top-bar-height);
   left: 0;
   bottom: 0;
-  min-width: 260px;
-  flex-basis: 12.5%;
+  min-width: var(--side-nav-min-width);
+  max-width: var(--side-nav-max-width);
+  flex-basis: var(--side-nav-width);
   background-color: var(--color-primary);
-  padding-right: var(--top-bar-inner-margin);
   z-index: 9;
+  padding: var(--top-bar-inner-margin);
 }
 
 .main-content-wrapper {
   flex: 1 1 auto;
-  overflow: auto;
+  overflow-y: auto;
 }
 
 /* Normalize */
