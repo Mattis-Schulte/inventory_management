@@ -2,12 +2,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;800&display=swap');
 
 :root {
-  --color-primary: #fff;
-  --color-secondary: #1E7CBC;
-  --background-color: #f8f8f8;
-  --text-color-primary: #1d1d1f;
-  --text-color-secondary: #6e6e73;
-  --text-color-tertiary: #e0e0e0;
+  --color-primary: #FFFFFF;
+  --color-accent-primary: #1E7CBC;
+  --color-accent-secondary: #1E7CBCC0;
+  --background-color: #F5F5F7;
+  --text-color-primary: #1D1D1F;
+  --text-color-secondary: #6E6E73;
+  --text-color-high-contrast: #FFFFFF;
+  --text-size-big: 1.5rem;
+  --text-size-medium: 1.15rem;
+  --text-size-normal: 1rem;
+  --text-weight-bold: 800;
+  --text-weight-medium: 600;
+  --text-weight-normal: 400;
+  --border-color-primary: #E0E0E0;
   --top-bar-height: 3.4rem;
   --top-bar-inner-margin: calc(var(--top-bar-height) / 8);
   --side-nav-width: 28%;
@@ -19,8 +27,8 @@
   margin: 0;
   padding: 0;
   font-family: 'Work Sans', Arial, sans-serif;
-  font-size: 1rem;
-  font-weight: 400;
+  font-size: var(--text-size-normal);
+  font-weight: var(--text-weight-normal);
   word-break: break-word;
   hyphens: manual;
   color: var(--text-color-secondary);
@@ -74,9 +82,9 @@ a {
 
 .logo-name h1 {
   padding: 0 0 0 calc(var(--top-bar-inner-margin) * 2);
-  font-size: 1.5rem;
-  font-weight: 600;
-  background: #1E7CBC;
+  font-size: var(--text-size-big);
+  font-weight: var(--text-weight-medium);
+  background: var(--color-accent-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -85,11 +93,11 @@ a {
   display: flex;
   flex: 1 1 auto;
   align-items: center;
-  border-right: 1px solid var(--text-color-tertiary);
+  border-right: 1px solid var(--border-color-primary);
   margin: var(--top-bar-inner-margin) 0;
   padding: 0 var(--top-bar-inner-margin);
-  border-left: 1px solid var(--text-color-tertiary);
-  border-right: 1px solid var(--text-color-tertiary);
+  border-left: 1px solid var(--border-color-primary);
+  border-right: 1px solid var(--border-color-primary);
 }
 
 .search form {
@@ -127,7 +135,7 @@ a {
   white-space: nowrap;
 }
 
-.login_form {
+.login-form {
   position: absolute;
   top: var(--top-bar-height);
   right: 0;
@@ -152,6 +160,30 @@ a {
   background-color: var(--color-primary);
   z-index: 9;
   padding: var(--top-bar-inner-margin);
+}
+
+.nav-side-bar a {
+  display: block;
+  transition: background-color 0.2s ease-in-out;
+  font-size: var(--text-size-medium);
+  border-radius: 0.4rem;
+  padding: 1rem;
+  margin: 0.5rem 0.25rem;
+}
+
+.nav-side-bar a:hover, .nav-side-bar a:focus, .nav-side-bar a:active {
+  background-color: var(--background-color);
+}
+
+.nav-side-bar a i {
+  font-size: inherit;
+  color: inherit;
+  margin-right: 0.8rem;
+}
+
+.nav-side-bar a.highlight {
+  background-color: var(--color-accent-secondary);
+  color: var(--text-color-high-contrast);
 }
 
 .main-content-wrapper {

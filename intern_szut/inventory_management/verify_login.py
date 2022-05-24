@@ -15,19 +15,21 @@ class VerifyLogin:
             header = {'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8', 'Accept-Encoding': 'gzip, deflate', 'User-Agent': 'itslearningintapp/3.5 (com.itslearning.itslearningintapp; build:22; iOS 15.4.1) Alamofire/3.5'}
             req = request.Request(f'{cls.domain}restapi/oauth2/token', headers=header)
             post_data = parse.urlencode({'client_id': cls.api_token, 'grant_type': 'password', 'password': password, 'username': username}).encode('utf-8')
-            response_data = decompress(request.urlopen(req, post_data).read()).decode('utf-8')
+            response = request.urlopen(req, post_data)
+            response_data = decompress(response.read()).decode('utf-8')
             access_token = str(findall(r'"access_token":"(.*?)"', response_data)[0])
-            return access_token
+            return response.getcode(), None, access_token
         except error.HTTPError as e:
-            # print(e.code, e.read())
-            return False
+            # print(e.code, e.read().decode('utf-8'))
+            return e.code, e.read().decode('utf-8'), False
 
     @classmethod
     def get_user_data(cls, access_token: str):
         try:
             header = {'User-Agent': 'itslearningintapp/3.5 (com.itslearning.itslearningintapp; build:22; iOS 15.4.1) Alamofire/3.5', 'Accept-Encoding': 'gzip, deflate'}
             req = request.Request(f'{cls.domain}restapi/personal/person/v1?access_token={access_token}', headers=header)
-            response_data = decompress(request.urlopen(req).read()).decode('utf-8')
+            response = request.urlopen(req)
+            response_data = decompress(response.read()).decode('utf-8')
             if findall(r'"Use12HTimeFormat":true', response_data):
                 use12h_time_format = True
             else:
@@ -42,10 +44,10 @@ class VerifyLogin:
                 'Use12HTimeFormat': use12h_time_format,
                 'FullName': str(findall(r'"FullName":"(.*?)"', response_data)[0])
             }
-            return user_data
+            return response.getcode(), None, user_data
         except error.HTTPError as e:
-            # print(e.code, e.read())
-            return False
+            # print(e.code, e.read().decode('utf-8'))
+            return e.code, e.read().decode('utf-8'), False
 
     @classmethod
     def get_user_role(cls, access_token: str):
@@ -54,15 +56,16 @@ class VerifyLogin:
             for role_id in [2, 1, 3]:
                 """ 1: Teachers, 2: Students, 3: Admins? """
                 req = request.Request(f'{cls.domain}restapi/personal/hierarchies/organisations/v1?role={role_id}&access_token={access_token}', headers=header)
-                response_data = decompress(request.urlopen(req).read()).decode('utf-8')
+                response = request.urlopen(req)
+                response_data = decompress(response.read()).decode('utf-8')
                 if findall(rf'"HierarchyId":{cls.hierarchy_id},"ParentHierarchyId":{cls.parent_hierarchy_id}', response_data):
-                    return role_id
-            return 4  # 4: Guest (not in organization)
+                    return response.getcode(), None, role_id
+            return response.getcode(), None, 4  # 4: Guest (not in organization)
         except error.HTTPError as e:
-            # print(e.code, e.read())
-            return False
+            # print(e.code, e.read().decode('utf-8'))
+            return e.code, e.read().decode('utf-8'), False
 
 
-# token = VerifyLogin.get_access_token(username, password)  # get token
-# user_data = VerifyLogin.get_user_data(token)  # get user data
-# user_role = VerifyLogin.get_user_role(token)  # get user role
+# http_code, error_message, token = VerifyLogin.get_access_token(username, password)  # get token
+# http_code, error_message, user_data = VerifyLogin.get_user_data(token)  # get user data
+# http_code, error_message, user_role = VerifyLogin.get_user_role(token)  # get user role

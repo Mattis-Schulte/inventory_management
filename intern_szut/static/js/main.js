@@ -1,31 +1,7 @@
-loadAjaxContent = function(page) {
-    $.ajax({
-        url: '../' + page + '/',
-        async: true,
-        success: function(data) {
-            $('#page-content').html(data);
-            $('#load-content-error').hide();
-            window.history.pushState(null, null, '../' + page + '/');
-            $('#customID').remove();
-            },
-        error: function() {
-            loadContentError();
-            window.history.pushState(null, null, '../' + page + '/');
-            },
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    });
-}
-
-loadContentError = function() {
-    document.title = "Fehler – SZUT Inventur Management"
-    $('#load-content-error').show();
-    $('#page-content').html('');
-}
+var current_highlight;
 
 $(document).ready(function() {
-  $("#login_form").on('submit', function(e){
+  $("#login-form").on('submit', function(e){
      e.preventDefault();
         var form = $(this);
         $.ajax({
@@ -44,3 +20,40 @@ $(document).ready(function() {
         });
   });
 });
+
+loadAjaxContent = function(page) {
+    $.ajax({
+        url: '/' + page + '/',
+        async: true,
+        success: function(data) {
+            $('#custom-css').remove();
+            $('#page-content').html(data);
+            $('#load-content-error').hide();
+            window.history.pushState(null, null, '/' + page + '/');
+            setHighlight(page);
+            },
+        error: function() {
+            $('#custom-css').remove();
+            loadContentError();
+            window.history.pushState(null, null, '/' + page + '/');
+            setHighlight(page);
+            },
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    });
+}
+
+loadContentError = function() {
+    document.title = "Fehler – SZUT Inventur Management";
+    $('#load-content-error').show();
+    $('#page-content').html('');
+}
+
+setHighlight = function(to_highlight) {
+    $('#' + to_highlight).addClass('highlight');
+    if (current_highlight && current_highlight !== to_highlight) {
+        $('#' + current_highlight).removeClass('highlight');
+    }
+    current_highlight = to_highlight;
+}
