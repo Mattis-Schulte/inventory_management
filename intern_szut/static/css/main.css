@@ -1,5 +1,5 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css");
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600&display=swap');
 
 :root {
   --color-primary: #FFFFFF;
@@ -9,13 +9,13 @@
   --text-color-primary: #1D1D1F;
   --text-color-secondary: #6E6E73;
   --text-color-high-contrast: #FFFFFF;
+  --text-color-error: #C60000;
   --theme-color-itslearning: #EE7203;
   --text-size-big: 1.5rem;
   --text-size-medium: 1.1rem;
   --text-size-highlight: 1.05rem;
   --text-size-normal: 1rem;
-  --text-weight-bold: 800;
-  --text-weight-medium: 600;
+  --text-weight-bold: 600;
   --text-weight-normal: 400;
   --border-color-primary: #E0E0E0;
   --top-bar-height: 3.4rem;
@@ -102,7 +102,7 @@ a {
 .logo-name h1 {
   padding: 0 0 0 calc(var(--top-bar-inner-margin) * 2);
   font-size: var(--text-size-big);
-  font-weight: var(--text-weight-medium);
+  font-weight: var(--text-weight-bold);
   background: var(--color-accent-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -136,14 +136,14 @@ a {
   outline: none;
 }
 
-.login {
+.account-card-wrapper {
   display: flex;
   flex-direction: row;
   align-items: stretch;
   margin-left: auto;
 }
 
-.top-bar-login {
+.top-bar-account-link {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -151,25 +151,42 @@ a {
   cursor: pointer;
 }
 
-.top-bar-login p, .top-bar-login p i {
+.top-bar-account-link p {
   color: var(--text-color-primary);
   white-space: nowrap;
+}
+
+.top-bar-account-link p i {
+  margin-left: var(--top-bar-inner-margin);
+  color: inherit;
+  white-space: nowrap;
+}
+
+.top-bar-account-link img {
+  display: none;
+  margin: var(--top-bar-inner-margin) 0 var(--top-bar-inner-margin) calc(var(--top-bar-inner-margin) * 1.5);
+  border: 1px solid var(--border-color-primary);
+  border-radius: 50%;
+  width: auto;
+  height: calc(var(--top-bar-height) - (var(--top-bar-inner-margin) * 2));
 }
 
 .account-card {
   display: none;
   position: fixed;
-  top: var(--top-bar-height);
   background-color: var(--color-primary);
   padding: 1rem;
+  top: var(--top-bar-height);
   right: 0;
+  max-height: calc(100% - var(--top-bar-height) - 2rem);
   z-index: 9;
   border: 1px solid var(--border-color-primary);
   border-radius: 0 0 0.4rem 0.4rem;
+  overflow-y: auto;
 }
 
 .login-form {
-  max-width: 280px;
+  width: 280px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -188,6 +205,14 @@ a {
   color: inherit;
 }
 
+.on-login-error {
+  display: none;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: var(--text-color-error);
+  font-weight: 600;
+}
+
 .login-form button {
   display: flex;
   flex-direction: row;
@@ -196,6 +221,7 @@ a {
   border: none;
   border-radius: 0.4rem;
   background-color: var(--theme-color-itslearning);
+  min-height: 50.5px;
   color: var(--text-color-high-contrast);
   cursor: pointer;
 }
@@ -210,6 +236,15 @@ a {
 .login-form img {
   display: inline;
   width: 12%;
+  height: auto;
+}
+
+.loader-wrapper {
+  display: none;
+  flex-basis: 100%;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
 }
 
 .main-area-wrapper {
@@ -266,6 +301,7 @@ a {
   bottom: 0;
   background-color: rgba(0,0,0,0.5);
   z-index: 8;
+  cursor: pointer;
 }
 
 .main-content-wrapper {
@@ -286,6 +322,7 @@ a {
   .nav-side-bar {
     display: none;
     position: fixed;
+    min-width: var(--side-nav-max-width);
   }
 
   .nav-side-bar-open {
@@ -294,6 +331,57 @@ a {
 
   .nav-side-bar-open + .nav-side-bar-overlay {
     display: block;
+  }
+}
+
+/* Animations */
+.dot-loader {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #9E9E9E;
+  color: #9E9E9E;
+  animation: dotFlashing 0.5s infinite linear alternate;
+  animation-delay: 0.25s;
+}
+
+.dot-loader::before, .dot-loader::after {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  top: 0;
+}
+
+.dot-loader::before {
+  left: -15px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #9E9E9E;
+  color: #9E9E9E;
+  animation: dotFlashing 0.5s infinite alternate;
+  animation-delay: 0s;
+}
+
+.dot-loader::after {
+  left: 15px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #9E9E9E;
+  color: #9E9E9E;
+  animation: dotFlashing 0.5s infinite alternate;
+  animation-delay: 0.5s;
+}
+
+@keyframes dotFlashing {
+  0% {
+    background-color: #9E9E9E;
+  }
+  50%,
+  100% {
+    background-color: var(--border-color-primary);
   }
 }
 

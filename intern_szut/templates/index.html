@@ -29,14 +29,15 @@
                 <h1>SZUT Inventur</h1>
             </a>
             <div class="search">
-                <form action="" role="search">
+                <form action="/search/" role="search">
                     <i class="bi bi-search" role="presentation"></i>
                     <input type="search" name="q" placeholder="Suche nach Räumen, Geräten und Tickets ...">
                 </form>
             </div>
-            <div class="login">
-                <div class="top-bar-login" tabindex="0" role="button" aria-pressed="false">
-                    <p>Anmelden <i class="bi bi-chevron-down"></i></p>
+            <div class="account-card-wrapper">
+                <div class="top-bar-account-link" tabindex="0" role="button" aria-pressed="false">
+                    <p>Anmelden<i class="bi bi-chevron-down"></i></p>
+                    <img src="https://filerepository.itslearning.com/396f5542-7544-29b3-a5ae-56afe08206fc" alt="Profilbild "width="191" height="192">
                 </div>
                 <div class="account-card">
                     <form id="login-form" class="login-form" action="/account/login/" method="post" style="">
@@ -45,9 +46,13 @@
                         <input type="text" name="username" required>
                         <label for="password">Passwort</label>
                         <input type="password" name="password" required>
+                        <p class="on-login-error"></p>
                         <button class="login-button" type="submit" value="Login">
-                            <img src="{% static 'images/itslearning-logo.svg' %}" alt="" role="presentation">
-                            <p>Anmelden mit itlearning</p>
+                            <img src="{% static 'images/itslearning-logo.svg' %}" alt="" role="presentation" width="64" height="64">
+                            <p>Anmelden mit itslearning</p>
+                            <div class="loader-wrapper">
+                                <div class="dot-loader"></div>
+                            </div>
                         </button>
                     </form>
                 </div>

@@ -3,42 +3,64 @@ var current_highlight;
 $(document).ready(function() {
   $('#login-form').on('submit', function(e){
      e.preventDefault();
-        var form = $(this);
-        $.ajax({
+      let form = $(this);
+      $.ajax({
             type: form.attr('method'),
             url: form.attr('action'),
             data: form.serialize(),
-            success: function(data) {
-                alert(data);
+            beforeSend: function() {
+                $('.login-button img').hide();
+                $('.login-button p').hide();
+                $('.loader-wrapper').css('display', 'flex');
             },
-            error: function(data) {
-                alert(data);
+            complete: function() {
+                $('.login-button img').show();
+                $('.login-button p').show();
+                $('.loader-wrapper').css('display', 'none');
+            },
+            success: function(data) {
+                // alert(data); // Debug
+                if (data.startsWith('User data:')) {
+                    alert(data);
+                    $('.account-card').hide();
+                    $('.top-bar-account-link').attr('aria-pressed', 'false');
+                    $('.top-bar-account-link i').removeClass('bi-chevron-up');
+                    $('.on-login-error').hide();
+                } else if (data.includes('{"ErrorCode":"InvalidUser"}')) {
+                    $('.on-login-error').text('Benutzername oder Passwort falsch.').show();
+                } else {
+                    $('.on-login-error').text('Ein Fehler ist aufgetreten.').show();
+                }
+            },
+            error: function() {
+                $('.on-login-error').text('Ein Fehler ist aufgetreten.').show();
             },
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
-            }
+            }, // add a new function that is called when loading
+
         });
   });
 
-  $('.menu-button-wrapper').click(function() {
+  $('.menu-button-wrapper, .nav-side-bar-overlay').click(function() {
       $('.account-card').hide();
-      $('.top-bar-login').attr('aria-pressed', 'false');
-      $('.top-bar-login i').removeClass('bi-chevron-up');
+      $('.top-bar-account-link').attr('aria-pressed', 'false');
+      $('.top-bar-account-link i').removeClass('bi-chevron-up');
 
       $('.menu-button-wrapper').attr('aria-pressed', function(i, attr) {
-            return attr == 'true' ? 'false' : 'true';
+            return attr === 'true' ? 'false' : 'true';
       });
       $('.nav-side-bar').toggleClass('nav-side-bar-open');
   });
 
-  $('.top-bar-login').click(function() {
+  $('.top-bar-account-link').click(function() {
       $('.nav-side-bar').removeClass('nav-side-bar-open');
       $('.menu-button-wrapper').attr('aria-pressed', 'false');
 
       $('.account-card').toggle();
-      $('.top-bar-login i').toggleClass('bi-chevron-up');
-      $('.top-bar-login').attr('aria-pressed', function(i, attr) {
-            return attr == 'true' ? 'false' : 'true';
+      $('.top-bar-account-link i').toggleClass('bi-chevron-up');
+      $('.top-bar-account-link').attr('aria-pressed', function(i, attr) {
+            return attr === 'true' ? 'false' : 'true';
       });
   });
 });

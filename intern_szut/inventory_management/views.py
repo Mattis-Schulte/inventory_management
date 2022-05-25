@@ -40,21 +40,23 @@ def account(request):
 
 def login(request):
     if request.method == 'POST' and request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-        if len(request.POST['username']) < 50 and len(request.POST['password']) < 50:
-            error_on = 'access_token'
-            http_code, error_message, access_token = verify_login.VerifyLogin.get_access_token(request.POST['username'], request.POST['password'])
-            if access_token:
-                error_on = 'user_data'
-                http_code, error_message, user_data = verify_login.VerifyLogin.get_user_data(access_token)
-                if user_data:
-                    error_on = 'user_role'
-                    http_code, error_message, user_role = verify_login.VerifyLogin.get_user_role(access_token)
-                    if user_role:
-                        response = HttpResponse(f'User data: {user_data}, User role: {user_role}')
-                        return response
+        if request.POST['username'] and request.POST['password']:
+            if len(request.POST['username']) < 50 and len(request.POST['password']) < 50:
+                error_on = 'access_token'
+                http_code, error_message, access_token = verify_login.VerifyLogin.get_access_token(request.POST['username'], request.POST['password'])
+                if access_token:
+                    error_on = 'user_data'
+                    http_code, error_message, user_data = verify_login.VerifyLogin.get_user_data(access_token)
+                    if user_data:
+                        error_on = 'user_role'
+                        http_code, error_message, user_role = verify_login.VerifyLogin.get_user_role(access_token)
+                        if user_role:
+                            response = HttpResponse(f'User data: {user_data}, User role: {user_role}')
+                            return response
 
-            return HttpResponse(f'Error on: {error_on}, HTTP-Code: {http_code}, Error-Code: {error_message}')
-        return HttpResponse('Username or password is too long')
+                return HttpResponse(f'Error on: {error_on}, HTTP-Code: {http_code}, Error-Code: {error_message}')
+            return HttpResponse('Username or password is too long')
+        return HttpResponse('Username or password is missing')
 
 def page_not_found_view(request, exception):
     # If request is ajax
