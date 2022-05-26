@@ -12,28 +12,30 @@ $(document).ready(function() {
                 $('.login-button img').hide();
                 $('.login-button p').hide();
                 $('.loader-wrapper').css('display', 'flex');
+                $('.login-form :input:not([type=hidden])').prop('disabled', true);
             },
             complete: function() {
                 $('.login-button img').show();
                 $('.login-button p').show();
                 $('.loader-wrapper').css('display', 'none');
+                $('.login-form :input:not([type=hidden])').prop('disabled', false);
             },
             success: function(data) {
                 // alert(data); // Debug
                 if (data.startsWith('User data:')) {
-                    alert(data);
                     $('.account-card').hide();
                     $('.top-bar-account-link').attr('aria-pressed', 'false');
                     $('.top-bar-account-link i').removeClass('bi-chevron-up');
                     $('.on-login-error').hide();
+                    alert(data);
                 } else if (data.includes('{"ErrorCode":"InvalidUser"}')) {
-                    $('.on-login-error').text('Benutzername oder Passwort falsch.').show();
+                    $('.on-login-error').text('Benutzername oder Passwort falsch').show();
                 } else {
-                    $('.on-login-error').text('Ein Fehler ist aufgetreten.').show();
+                    $('.on-login-error').text('Ein Fehler ist aufgetreten').show();
                 }
             },
             error: function() {
-                $('.on-login-error').text('Ein Fehler ist aufgetreten.').show();
+                $('.on-login-error').text('Ein Fehler ist aufgetreten').show();
             },
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
