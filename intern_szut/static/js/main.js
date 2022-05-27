@@ -22,7 +22,7 @@ $(document).ready(function() {
                 $('.login-form :input:not([type=hidden])').prop('disabled', false);
             },
             success: function(data) {
-                alert(data); // Debug
+                // alert(data); // Debug
                 if (data.startsWith('Success')) {
                     $('.account-card').hide();
                     $('.top-bar-account-link').attr('aria-pressed', 'false');
