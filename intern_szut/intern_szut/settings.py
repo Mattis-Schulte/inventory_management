@@ -67,6 +67,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'intern_szut.wsgi.application'
+AUTH_USER_MODEL = 'inventory_management.MyUser'
+AUTHENTICATION_BACKENDS = ['inventory_management.auth.AuthenticationBackend', 'django.contrib.auth.backends.ModelBackend']
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases

@@ -1,10 +1,14 @@
+from inventory_management.models import MyUser
+from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from . import verify_login
+from django.views.decorators.csrf import csrf_protect
+from inventory_management import verify_login
 
 
 def index(request):
     return redirect('overview')
+
 
 def overview(request):
     # If request is ajax
@@ -13,6 +17,7 @@ def overview(request):
     else:
         return render(request, 'index.html', {'current_page_category': 'overview', 'current_page_file': 'overview.html'})
 
+
 def rooms(request):
     # If request is ajax
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
@@ -20,17 +25,21 @@ def rooms(request):
     else:
         return render(request, 'index.html', {'current_page_category': 'rooms', 'current_page_file': 'rooms.html'})
 
+
 def devices(request):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         return render(request, 'devices.html')
     else:
         return render(request, 'index.html', {'current_page_category': 'devices', 'current_page_file': 'devices.html'})
 
+
 def ticket_management(request):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         return render(request, 'ticket-management.html')
     else:
-        return render(request, 'index.html', {'current_page_category': 'ticket-management', 'current_page_file': 'ticket-management.html'})
+        return render(request, 'index.html',
+                      {'current_page_category': 'ticket-management', 'current_page_file': 'ticket-management.html'})
+
 
 def account(request):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
@@ -38,12 +47,15 @@ def account(request):
     else:
         return render(request, 'index.html', {'current_page_category': 'account', 'current_page_file': 'account.html'})
 
+
+@csrf_protect
 def login(request):
     if request.method == 'POST' and request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         if request.POST['username'] and request.POST['password']:
             if len(request.POST['username']) < 50 and len(request.POST['password']) < 50:
                 error_on = 'access_token'
-                http_code, error_message, access_token = verify_login.VerifyLogin.get_access_token(request.POST['username'], request.POST['password'])
+                http_code, error_message, access_token = verify_login.VerifyLogin.get_access_token(
+                    request.POST['username'], request.POST['password'])
                 if access_token:
                     error_on = 'user_data'
                     http_code, error_message, user_data = verify_login.VerifyLogin.get_user_data(access_token)
@@ -51,12 +63,22 @@ def login(request):
                         error_on = 'user_role'
                         http_code, error_message, user_role = verify_login.VerifyLogin.get_user_role(access_token)
                         if user_role:
-                            response = HttpResponse(f'User data: {user_data}, User role: {user_role}')
+                            user = authenticate(request, person_id=user_data['PersonId'], user_name=request.POST['username'], first_name=user_data['FirstName'], last_name=user_data['LastName'], user_role=user_role)
+
+                            if user is None:
+                                response = HttpResponse('Unknown error')
+                            else:
+                                MyUser.objects.filter(person_id=user_data['PersonId']).update(language=user_data['Language'])
+                                MyUser.objects.filter(person_id=user_data['PersonId']).update(profile_image_url=user_data['ProfileImageUrl'])
+                                MyUser.objects.filter(person_id=user_data['PersonId']).update(use_12_hour_time_format=user_data['Use12HTimeFormat'])
+                                response = HttpResponse(f'Success')
+
                             return response
 
                 return HttpResponse(f'Error on: {error_on}, HTTP-Code: {http_code}, Error-Code: {error_message}')
             return HttpResponse('Username or password is too long')
         return HttpResponse('Username or password is missing')
+
 
 def page_not_found_view(request, exception):
     # If request is ajax
@@ -64,6 +86,7 @@ def page_not_found_view(request, exception):
         return HttpResponse(status=404)
     else:
         return redirect('overview')
+
 
 def page_error(request):
     # If request is ajax

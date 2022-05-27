@@ -8,6 +8,7 @@ $(document).ready(function() {
             type: form.attr('method'),
             url: form.attr('action'),
             data: form.serialize(),
+            cache: "false",
             beforeSend: function() {
                 $('.login-button img').hide();
                 $('.login-button p').hide();
@@ -21,13 +22,12 @@ $(document).ready(function() {
                 $('.login-form :input:not([type=hidden])').prop('disabled', false);
             },
             success: function(data) {
-                // alert(data); // Debug
-                if (data.startsWith('User data:')) {
+                alert(data); // Debug
+                if (data.startsWith('Success')) {
                     $('.account-card').hide();
                     $('.top-bar-account-link').attr('aria-pressed', 'false');
                     $('.top-bar-account-link i').removeClass('bi-chevron-up');
                     $('.on-login-error').hide();
-                    alert(data);
                 } else if (data.includes('{"ErrorCode":"InvalidUser"}')) {
                     $('.on-login-error').text('Benutzername oder Passwort falsch').show();
                 } else {
@@ -39,7 +39,7 @@ $(document).ready(function() {
             },
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
-            }, // add a new function that is called when loading
+            },
 
         });
   });

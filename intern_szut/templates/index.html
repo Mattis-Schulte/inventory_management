@@ -37,7 +37,7 @@
             <div class="account-card-wrapper">
                 <div class="top-bar-account-link" tabindex="0" role="button" aria-pressed="false">
                     <p>Anmelden<i class="bi bi-chevron-down"></i></p>
-                    <img src="" alt="Profilbild" width="191" height="192">
+                    <img src="" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
                 </div>
                 <div class="account-card">
                     <form id="login-form" class="login-form" action="/account/login/" method="post" style="">
@@ -82,8 +82,7 @@
             </div>
 
             <div id="page-content" class="page-content">
-                <script>setHighlight('{{ current_page_category }}');</script>
-                {% if current_page_file|template_exists %}{% include current_page_file %}{% else %}<script>loadContentError();</script>{% endif %}
+                {% if current_page_file|template_exists %}<script>setHighlight('{{ current_page_category }}');</script>{% include current_page_file %}{% else %}<script>setHighlight('{{ current_page_category }}'); loadContentError();</script>{% endif %}
             </div>
         </div>
     </main>

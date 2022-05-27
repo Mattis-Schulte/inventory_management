@@ -30,19 +30,14 @@ class VerifyLogin:
             req = request.Request(f'{cls.domain}restapi/personal/person/v1?access_token={access_token}', headers=header)
             response = request.urlopen(req)
             response_data = decompress(response.read()).decode('utf-8')
-            if findall(r'"Use12HTimeFormat":true', response_data):
-                use12h_time_format = True
-            else:
-                use12h_time_format = False
 
             user_data = {
                 'PersonId': int(findall(r'"PersonId":(.*?),', response_data)[0]),
                 'FirstName': str(findall(r'"FirstName":"(.*?)"', response_data)[0]),
                 'LastName': str(findall(r'"LastName":"(.*?)"', response_data)[0]),
                 'Language': str(findall(r'"Language":"(.*?)"', response_data)[0]),
-                'ProfileImageUrl': str(findall(r'"ProfileImageUrl":"(.*?)"', response_data)[0]),
-                'Use12HTimeFormat': use12h_time_format,
-                'FullName': str(findall(r'"FullName":"(.*?)"', response_data)[0])
+                'ProfileImageUrl': (str(findall(r'"ProfileImageUrl":"(.*?)"', response_data)[0]) if findall(r'"ProfileImageUrl":"(.*?)"', response_data) else None),
+                'Use12HTimeFormat': (True if findall(r'"Use12HTimeFormat":true', response_data) else False)
             }
             return response.getcode(), None, user_data
         except error.HTTPError as e:
