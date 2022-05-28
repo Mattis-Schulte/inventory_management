@@ -57,7 +57,10 @@ def account(request):
         else:
             return render(request, 'index.html', {'current_page_category': 'account', 'current_page_file': 'account.html'})
     else:
-        return redirect('overview')
+        if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+            return HttpResponse(status=401)
+        else:
+            return redirect('overview')
 
 
 @csrf_protect

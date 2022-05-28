@@ -1,9 +1,9 @@
 from django.contrib import admin
-from inventory_management.models import MyUser, Raeume, Geraete_Klasse, Geraete, Tickets
+from inventory_management.models import MyUser, Room, DeviceClasses, Device, Ticket
 
 # Register your models here.
 admin.site.register(MyUser)
-admin.site.register(Raeume)
-admin.site.register(Geraete_Klasse)
-admin.site.register(Geraete)
-admin.site.register(Tickets)
+admin.site.register(Room)
+admin.site.register(DeviceClasses)
+admin.site.register(Device)
+admin.site.register(Ticket)
