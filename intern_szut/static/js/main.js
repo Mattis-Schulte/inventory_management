@@ -12,22 +12,19 @@ $(document).ready(function() {
             beforeSend: function() {
                 $('.login-button img').hide();
                 $('.login-button p').hide();
-                $('.loader-wrapper').css('display', 'flex');
+                $('.login-loader-wrapper').css('display', 'flex');
                 $('.login-form :input:not([type=hidden])').prop('disabled', true);
             },
             complete: function() {
                 $('.login-button img').show();
                 $('.login-button p').show();
-                $('.loader-wrapper').css('display', 'none');
+                $('.login-loader-wrapper').css('display', 'none');
                 $('.login-form :input:not([type=hidden])').prop('disabled', false);
             },
             success: function(data) {
                 // alert(data); // Debug
                 if (data.startsWith('Success')) {
-                    $('.account-card').hide();
-                    $('.top-bar-account-link').attr('aria-pressed', 'false');
-                    $('.top-bar-account-link i').removeClass('bi-chevron-up');
-                    $('.on-login-error').hide();
+                    location.reload();
                 } else if (data.includes('{"ErrorCode":"InvalidUser"}')) {
                     $('.on-login-error').text('Benutzername oder Passwort falsch').show();
                 } else {
@@ -55,7 +52,7 @@ $(document).ready(function() {
       $('.nav-side-bar').toggleClass('nav-side-bar-open');
   });
 
-  $('.top-bar-account-link').click(function() {
+  $('.top-bar-account-link, .account-li-not-logged-in').click(function() {
       $('.nav-side-bar').removeClass('nav-side-bar-open');
       $('.menu-button-wrapper').attr('aria-pressed', 'false');
 
@@ -69,22 +66,30 @@ $(document).ready(function() {
 
 loadAjaxContent = function(page) {
     $.ajax({
-        url: '/' + page + '/',
+        url: page,
         async: true,
         success: function(data) {
             $('#custom-css').remove();
             $('#page-content').html(data);
             $('#load-content-error').hide();
             $('.nav-side-bar').removeClass('nav-side-bar-open');
-            window.history.pushState(null, null, '/' + page + '/');
-            setHighlight(page);
+            $('.menu-button-wrapper').attr('aria-pressed', 'false');
+            $('.account-card').hide();
+            $('.top-bar-account-link').attr('aria-pressed', 'false');
+            $('.top-bar-account-link i').removeClass('bi-chevron-up');
+            window.history.pushState(null, null, page);
+            setHighlight(page.split('/')[1]);
             },
         error: function() {
             $('#custom-css').remove();
             loadContentError();
             $('.nav-side-bar').removeClass('nav-side-bar-open');
-            window.history.pushState(null, null, '/' + page + '/');
-            setHighlight(page);
+            $('.menu-button-wrapper').attr('aria-pressed', 'false');
+            $('.account-card').hide();
+            $('.top-bar-account-link').attr('aria-pressed', 'false');
+            $('.top-bar-account-link i').removeClass('bi-chevron-up');
+            window.history.pushState(null, null, page);
+            setHighlight(page.split('/')[1]);
             },
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
@@ -100,7 +105,7 @@ loadContentError = function() {
 
 setHighlight = function(to_highlight) {
     $('#' + to_highlight).addClass('highlight');
-    if (current_highlight && current_highlight !== to_highlight) {
+    if (current_highlight !== to_highlight) {
         $('#' + current_highlight).removeClass('highlight');
     }
     current_highlight = to_highlight;

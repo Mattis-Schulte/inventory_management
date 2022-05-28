@@ -1,13 +1,22 @@
-from inventory_management.models import MyUser
+# from inventory_management.models import MyUser
 from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_protect
 from inventory_management import verify_login
+from django.contrib.auth import login as auth_login
+from django.contrib.auth import logout as auth_logout
 
 
 def index(request):
     return redirect('overview')
+
+
+def search(request):
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+        return HttpResponse('Search')
+    else:
+        return redirect('overview')
 
 
 def overview(request):
@@ -42,10 +51,13 @@ def ticket_management(request):
 
 
 def account(request):
-    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-        return render(request, 'account.html')
+    if request.user.is_authenticated:
+        if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+            return render(request, 'account.html')
+        else:
+            return render(request, 'index.html', {'current_page_category': 'account', 'current_page_file': 'account.html'})
     else:
-        return render(request, 'index.html', {'current_page_category': 'account', 'current_page_file': 'account.html'})
+        return redirect('overview')
 
 
 @csrf_protect
@@ -67,6 +79,7 @@ def login(request):
                             if user is None:
                                 response = HttpResponse('Unknown error, probably disabled account')
                             else:
+                                auth_login(request, user)
                                 response = HttpResponse(f'Success')
 
                             return response
@@ -74,6 +87,11 @@ def login(request):
                 return HttpResponse(f'Error on: {error_on}, HTTP-Code: {http_code}, Error-Code: {error_message}')
             return HttpResponse('Username or password is too long')
         return HttpResponse('Username or password is missing')
+
+
+def logout(request):
+    auth_logout(request)
+    return redirect('overview')
 
 
 def page_not_found_view(request, exception):

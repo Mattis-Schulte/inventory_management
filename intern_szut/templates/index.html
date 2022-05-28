@@ -24,37 +24,52 @@
             <div class="menu-button-wrapper" tabindex="0" role="button" aria-pressed="false">
                 <div class="menu-button-icon"><i class="bi bi-list"></i></div>
             </div>
-            <a class="logo-name" href="/overview/" onclick="loadAjaxContent('overview');return false">
+            <a class="logo-name" href="{% url 'overview' %}" onclick="loadAjaxContent('{% url 'overview' %}');return false">
                 <img src="{% static 'images/szut-logo.webp' %}" alt="Logo" width="273" height="327">
                 <h1>SZUT Inventur</h1>
             </a>
             <div class="top-bar-search" style="">
-                <form action="/search/" role="search">
+                <form action="{% url 'search' %}" role="search">
                     <i class="bi bi-search" role="presentation"></i>
                     <input type="search" name="q" placeholder="Suche nach Räumen, Geräten und Tickets ...">
                 </form>
             </div>
             <div class="account-card-wrapper">
                 <div class="top-bar-account-link" tabindex="0" role="button" aria-pressed="false">
-                    <p>Anmelden<i class="bi bi-chevron-down"></i></p>
-                    <img src="" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
+                    <p>{% if user.is_authenticated %}{{ user.get_full_name }}{% else %}Anmelden{% endif %}<i class="bi bi-chevron-down"></i></p>
+                    {% if user.is_authenticated %}<img src="{% if user.profile_image_url %}{{ user.profile_image_url }}{% endif %}" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">{% endif %}
                 </div>
                 <div class="account-card">
-                    <form id="login-form" class="login-form" action="/account/login/" method="post" style="">
-                        {% csrf_token %}
-                        <label for="username">Benutzername</label>
-                        <input type="text" name="username" required>
-                        <label for="password">Passwort</label>
-                        <input type="password" name="password" required>
-                        <p class="on-login-error"></p>
-                        <button class="login-button" type="submit" value="Login">
-                            <img src="{% static 'images/itslearning-logo.svg' %}" alt="" role="presentation" width="64" height="64">
-                            <p>Anmelden mit itslearning</p>
-                            <div class="loader-wrapper">
-                                <div class="dot-loader"></div>
-                            </div>
-                        </button>
-                    </form>
+                    {% if user.is_authenticated %}
+                        <div class="account-card-logged-in">
+                            <img src="{% if user.profile_image_url %}{{ user.profile_image_url }}{% endif %}" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
+                            <ul>
+                                <li><p>{{ user.get_full_name }}</p></li>
+                                <li><p>{% if user.is_superuser %}System-Admin{% elif user.is_admin %}Admin{% elif user.is_staff %}Lehrer{% elif not user.is_guest %}Schüler{% elif user.is_guest %}Gast{% endif %}</p></li>
+                                {% if user.is_staff or user.is_admin or user.is_superuser %}<li class="link-to-admin-page"><p><a href="/admin/" class="link-to-admin-page-a"><i class="bi bi-box-arrow-up-right"></i>Admin-Seite</a></p></li>{% endif %}
+                                <li>
+                                    <a href="{% url 'account' %}" onclick="loadAjaxContent('{% url 'account' %}');return false">Mein Account</a>
+                                    <a href="{% url 'logout' %}">Abmelden</a>
+                                </li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <form id="login-form" class="login-form" action="{% url 'login' %}" method="post" style="">
+                            {% csrf_token %}
+                            <label for="username">Benutzername</label>
+                            <input type="text" name="username" required>
+                            <label for="password">Passwort</label>
+                            <input type="password" name="password" required>
+                            <p class="on-login-error"></p>
+                            <button class="login-button" type="submit" value="Login">
+                                <img src="{% static 'images/itslearning-logo.svg' %}" alt="" role="presentation" width="64" height="64">
+                                <p>Anmelden mit itslearning</p>
+                                <div class="login-loader-wrapper">
+                                    <div class="dot-loader"></div>
+                                </div>
+                            </button>
+                        </form>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -63,16 +78,20 @@
         <nav class="nav-side-bar" role="navigation">
             <ul>
                 <li>
-                    <form action="/search/" role="search">
+                    <form action="{% url 'search' %}" role="search">
                         <i class="bi bi-search" role="presentation"></i>
                         <input type="search" name="q" placeholder="Suche nach ...">
                     </form>
                 </li>
-                <li><a id="overview" href="/overview/" onclick="loadAjaxContent('overview');return false"><i class="bi bi-file-earmark-post"></i>Übersicht</a></li>
-                <li><a id="rooms" href="/rooms/" onclick="loadAjaxContent('rooms');return false"><i class="bi bi-house-fill"></i>Räume</a></li>
-                <li><a id="devices" href="/devices/" onclick="loadAjaxContent('devices');return false"><i class="bi bi-pc-display"></i>Geräte</a></li>
-                <li><a id="ticket-management" href="/ticket-management/" onclick="loadAjaxContent('ticket-management');return false"><i class="bi bi-ticket-fill"></i>Ticket-System</a></li>
-                <li><a id="account" href="/account/" onclick="loadAjaxContent('account');return false"><i class="bi bi-person-lines-fill"></i>Account</a></li>
+                <li><a id="overview" href="{% url 'overview' %}" onclick="loadAjaxContent('{% url 'overview' %}');return false"><i class="bi bi-file-earmark-post"></i>Übersicht</a></li>
+                <li><a id="rooms" href="{% url 'rooms' %}" onclick="loadAjaxContent('{% url 'rooms' %}');return false"><i class="bi bi-house-fill"></i>Räume</a></li>
+                <li><a id="devices" href="{% url 'devices' %}" onclick="loadAjaxContent('{% url 'devices' %}');return false"><i class="bi bi-pc-display"></i>Geräte</a></li>
+                <li><a id="ticket-management" href="{% url 'ticket-management' %}" onclick="loadAjaxContent('{% url 'ticket-management' %}');return false"><i class="bi bi-ticket-fill"></i>Ticket-System</a></li>
+                {% if user.is_authenticated %}
+                    <li><a id="account" href="{% url 'account' %}" onclick="loadAjaxContent('{% url 'account' %}');return false"><i class="bi bi-person-lines-fill"></i>Account</a></li>
+                {% else %}
+                    <li><a id="account" class="account-li-not-logged-in"><i class="bi bi-person-lines-fill"></i>Account</a></li>
+                {% endif %}
             </ul>
         </nav>
         <div class="nav-side-bar-overlay"></div>
