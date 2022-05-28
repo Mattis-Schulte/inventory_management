@@ -1,4 +1,3 @@
-# from inventory_management.models import MyUser
 from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -6,10 +5,6 @@ from django.views.decorators.csrf import csrf_protect
 from inventory_management import verify_login
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
-
-
-def index(request):
-    return redirect('overview')
 
 
 def search(request):
@@ -20,7 +15,6 @@ def search(request):
 
 
 def overview(request):
-    # If request is ajax
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         return render(request, 'overview.html')
     else:
@@ -28,7 +22,6 @@ def overview(request):
 
 
 def rooms(request):
-    # If request is ajax
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         return render(request, 'rooms.html')
     else:
@@ -98,7 +91,6 @@ def logout(request):
 
 
 def page_not_found_view(request, exception):
-    # If request is ajax
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         return HttpResponse(status=404)
     else:
@@ -106,7 +98,6 @@ def page_not_found_view(request, exception):
 
 
 def page_error(request):
-    # If request is ajax
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         return HttpResponse(status=500)
     else:

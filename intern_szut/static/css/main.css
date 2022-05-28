@@ -48,6 +48,7 @@ a {
   text-decoration: none;
 }
 
+/* Top bar */
 .top-bar-content {
   background-color: var(--color-primary);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -143,6 +144,7 @@ a {
   margin-left: auto;
 }
 
+/* Top bar account info */
 .top-bar-account-link {
   display: flex;
   flex-direction: row;
@@ -160,12 +162,12 @@ a {
   margin-left: var(--top-bar-inner-margin);
 }
 
-/* Profile Picture */
 .top-bar-account-link img {
   margin: var(--top-bar-inner-margin) 0 var(--top-bar-inner-margin) calc(var(--top-bar-inner-margin) * 1.5);
   border: 1.4px solid var(--border-color-primary);
   border-radius: 50%;
-  width: auto;
+  background-size: cover;
+  width: calc(var(--top-bar-height) - (var(--top-bar-inner-margin) * 2));
   height: calc(var(--top-bar-height) - (var(--top-bar-inner-margin) * 2));
 }
 
@@ -181,9 +183,12 @@ a {
   z-index: 9;
   border: 1px solid var(--border-color-primary);
   border-radius: 0 0 0.4rem 0.4rem;
+  overflow-x: hidden;
   overflow-y: auto;
+  max-width: 350px;
 }
 
+/* Login form */
 .login-form {
   width: 280px;
   display: flex;
@@ -249,6 +254,7 @@ a {
   justify-content: center;
 }
 
+/* Account card when logged in */
 .account-card-logged-in {
   display: flex;
   flex-direction: row;
@@ -282,6 +288,10 @@ a {
   color: var(--text-color-primary);
 }
 
+.account-card-logged-in ul li:last-child a:first-child {
+  margin-bottom: 0.2rem;
+}
+
 .link-to-admin-page {
   margin-bottom: 0.5rem;
   text-decoration: underline;
@@ -300,6 +310,7 @@ a {
   height: calc(100% - var(--top-bar-height));
 }
 
+/* Sidebar */
 .nav-side-bar {
   top: var(--top-bar-height);
   left: 0;
