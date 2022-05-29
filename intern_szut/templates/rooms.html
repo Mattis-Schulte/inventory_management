@@ -1,3 +1,24 @@
 {% load static %}
 <script>document.title ='Räume – SZUT Inventur Management'; $('head').append('<link rel="stylesheet" id="custom-css" href="{% static 'css/rooms.css' %}" />');</script>
 <h1>Räume</h1>
+<h2>Anzahl an Räumen: {{ rooms|length }}</h2>
+<h2>Anzahl an Etagen: {{ floors|length }}</h2>
+<h2>Anzahl an Bauabschnitten: {{ building_sections|length }}</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Etage</th>
+            <th>Bauabschnitt</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for room in rooms %}
+        <tr class="floor-{{ room.floor__id }} building-section-{{ room.building_section__id }}" onclick="loadAjaxContent('{% url 'rooms' %}{{ room.name }}/')">
+            <th>{{ room.name }}</th>
+            <th>{{ room.floor__name }}</th>
+            <th>{{ room.building_section__name }}</th>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -1,10 +1,12 @@
 from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_protect
 from inventory_management import verify_login
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
+
+from inventory_management.models import BuildingSection, Floor, Room
 
 
 def search(request):
@@ -22,10 +24,24 @@ def overview(request):
 
 
 def rooms(request):
+    building_section_data = BuildingSection.objects.order_by('name').all().values('name', 'id')
+    floor_data = Floor.objects.order_by('name').all().values('name', 'id')
+    room_data = Room.objects.order_by('building_section__name', 'floor__name', 'name').all().values('building_section__name', 'building_section__id', 'floor__name', 'floor__id', 'name')
+
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-        return render(request, 'rooms.html')
+        return render(request, 'rooms.html', {'building_sections': list(building_section_data), 'floors': list(floor_data), 'rooms': list(room_data)})
     else:
-        return render(request, 'index.html', {'current_page_category': 'rooms', 'current_page_file': 'rooms.html'})
+        return render(request, 'index.html', {'current_page_category': 'rooms', 'current_page_file': 'rooms.html', 'building_sections': list(building_section_data), 'floors': list(floor_data), 'rooms': list(room_data)})
+
+
+def room_details(request, room_name):
+    if Room.objects.filter(name=room_name).exists():
+        if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+            return render(request, 'room_details.html', {'room_name': room_name})
+        else:
+            return render(request, 'index.html', {'current_page_category': 'rooms', 'current_page_file': 'room_details.html', 'room_name': room_name})
+    else:
+        return redirect('rooms')
 
 
 def devices(request):
@@ -39,8 +55,7 @@ def ticket_management(request):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         return render(request, 'ticket-management.html')
     else:
-        return render(request, 'index.html',
-                      {'current_page_category': 'ticket-management', 'current_page_file': 'ticket-management.html'})
+        return render(request, 'index.html', {'current_page_category': 'ticket-management', 'current_page_file': 'ticket-management.html'})
 
 
 def account(request):
@@ -86,8 +101,12 @@ def login(request):
 
 
 def logout(request):
-    auth_logout(request)
-    return redirect('overview')
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+        auth_logout(request)
+        return HttpResponse(f'Success')
+    else:
+        auth_logout(request)
+        return redirect('overview')
 
 
 def page_not_found_view(request, exception):

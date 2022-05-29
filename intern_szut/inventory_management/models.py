@@ -9,7 +9,7 @@ bootstrap_icon_validator = RegexValidator(regex=r'^bi bi-[a-z0-9-]+$', message=_
 class MyUserManager(BaseUserManager):
     def create_user(self, person_id, username, first_name, last_name, password=None):
         if not person_id or not username or not first_name or not last_name:
-            raise ValueError(_('Users must have a person_id, username, first_name and last_name.'))
+            raise ValueError(_('Benutzer müssen eine Person-ID, einen Benutzernamen, Vornamen und Nachnamen haben.'))
 
         user = self.model(
             person_id=person_id,
@@ -42,7 +42,7 @@ class MyUserManager(BaseUserManager):
 
 
 class MyUser(AbstractUser):
-    person_id = models.CharField(verbose_name=_('itslearning – Person ID'), max_length=10, unique=True)
+    person_id = models.CharField(verbose_name=_('itslearning Person-ID'), max_length=10, unique=True)
     username = models.CharField(verbose_name=_('Benutzername'), max_length=25, unique=True)
     first_name = models.CharField(verbose_name=_('Vorname'), max_length=25)
     last_name = models.CharField(verbose_name=_('Nachname'), max_length=25)

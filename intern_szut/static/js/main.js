@@ -8,7 +8,7 @@ $(document).ready(function() {
             type: form.attr('method'),
             url: form.attr('action'),
             data: form.serialize(),
-            cache: "false",
+            cache: false,
             beforeSend: function() {
                 $('.login-button img').hide();
                 $('.login-button p').hide();
@@ -64,10 +64,10 @@ $(document).ready(function() {
   });
 });
 
-loadAjaxContent = function(page) {
+loadAjaxContent = function(page, push_state=true) {
     $.ajax({
         url: page,
-        async: true,
+        cache: false,
         success: function(data) {
             $('#custom-css').remove();
             $('#page-content').html(data);
@@ -77,7 +77,9 @@ loadAjaxContent = function(page) {
             $('.account-card').hide();
             $('.top-bar-account-link').attr('aria-pressed', 'false');
             $('.top-bar-account-link i').removeClass('bi-chevron-up');
-            window.history.pushState(null, null, page);
+            if (push_state) {
+                window.history.pushState(null, null, page);
+            }
             setHighlight(page.split('/')[1]);
             },
         error: function() {
@@ -88,9 +90,35 @@ loadAjaxContent = function(page) {
             $('.account-card').hide();
             $('.top-bar-account-link').attr('aria-pressed', 'false');
             $('.top-bar-account-link i').removeClass('bi-chevron-up');
-            window.history.pushState(null, null, page);
+            if (push_state) {
+                window.history.pushState(null, null, page);
+            }
             setHighlight(page.split('/')[1]);
             },
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    });
+}
+
+$(window).bind("popstate", function () {
+  loadAjaxContent(location.pathname, false);
+});
+
+logout = function(url) {
+    $.ajax({
+        url: url,
+        cache: false,
+        success: function() {
+            location.reload();
+        },
+        error: function() {
+            $('#custom-css').remove();
+            loadContentError();
+            $('.account-card').hide();
+            $('.top-bar-account-link').attr('aria-pressed', 'false');
+            $('.top-bar-account-link i').removeClass('bi-chevron-up');
+        },
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
         }

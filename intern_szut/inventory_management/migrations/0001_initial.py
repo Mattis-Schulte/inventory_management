@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
                 ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
                 ('email', models.EmailField(blank=True, max_length=254, verbose_name='email address')),
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
-                ('person_id', models.CharField(max_length=10, unique=True, verbose_name='itslearning – Person ID')),
+                ('person_id', models.CharField(max_length=10, unique=True, verbose_name='itslearning Person-ID')),
                 ('username', models.CharField(max_length=25, unique=True, verbose_name='Benutzername')),
                 ('first_name', models.CharField(max_length=25, verbose_name='Vorname')),
                 ('last_name', models.CharField(max_length=25, verbose_name='Nachname')),

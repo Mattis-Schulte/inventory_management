@@ -49,7 +49,7 @@
                                 {% if user.is_staff or user.is_admin or user.is_superuser %}<li class="link-to-admin-page"><p><a target="_blank" rel="noopener noreferrer" href="/admin/" class="link-to-admin-page-a"><i class="bi bi-box-arrow-up-right"></i>Admin-Seite</a></p></li>{% endif %}
                                 <li>
                                     <a href="{% url 'account' %}" onclick="loadAjaxContent('{% url 'account' %}');return false">Mein Account</a>
-                                    <a href="{% url 'logout' %}">Abmelden</a>
+                                    <a href="{% url 'logout' %}" onclick="logout('{% url 'logout' %}');return false">Abmelden</a>
                                 </li>
                             </ul>
                         </div>
@@ -84,7 +84,7 @@
                     </form>
                 </li>
                 <li><a id="overview" href="{% url 'overview' %}" onclick="loadAjaxContent('{% url 'overview' %}');return false"><i class="bi bi-file-earmark-post"></i>Übersicht</a></li>
-                <li><a id="rooms" href="{% url 'rooms' %}" onclick="loadAjaxContent('{% url 'rooms' %}');return false"><i class="bi bi-house-fill"></i>Räume</a></li>
+                <li><a id="rooms" href="{% url 'rooms' %}" onclick="loadAjaxContent('{% url 'rooms' %}');return false"><i class="bi bi-door-open-fill"></i>Räume</a></li>
                 <li><a id="devices" href="{% url 'devices' %}" onclick="loadAjaxContent('{% url 'devices' %}');return false"><i class="bi bi-pc-display"></i>Geräte</a></li>
                 <li><a id="ticket-management" href="{% url 'ticket-management' %}" onclick="loadAjaxContent('{% url 'ticket-management' %}');return false"><i class="bi bi-ticket-fill"></i>Ticket-System</a></li>
                 {% if user.is_authenticated %}
