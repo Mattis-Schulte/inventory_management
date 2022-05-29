@@ -90,7 +90,7 @@
                 {% if user.is_authenticated %}
                     <li><a id="account" href="{% url 'account' %}" onclick="loadAjaxContent('{% url 'account' %}');return false"><i class="bi bi-person-lines-fill"></i>Account</a></li>
                 {% else %}
-                    <li><a id="account" class="account-li-not-logged-in"><i class="bi bi-person-lines-fill"></i>Account</a></li>
+                    <li><a id="account" class="account-li-not-logged-in" tabindex="0"><i class="bi bi-person-lines-fill"></i>Account</a></li>
                 {% endif %}
             </ul>
         </nav>

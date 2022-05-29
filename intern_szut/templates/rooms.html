@@ -1,24 +1,117 @@
 {% load static %}
-<script>document.title ='Räume – SZUT Inventur Management'; $('head').append('<link rel="stylesheet" id="custom-css" href="{% static 'css/rooms.css' %}" />');</script>
 <h1>Räume</h1>
-<h2>Anzahl an Räumen: {{ rooms|length }}</h2>
-<h2>Anzahl an Etagen: {{ floors|length }}</h2>
-<h2>Anzahl an Bauabschnitten: {{ building_sections|length }}</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Etage</th>
-            <th>Bauabschnitt</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for room in rooms %}
-        <tr class="floor-{{ room.floor__id }} building-section-{{ room.building_section__id }}" onclick="loadAjaxContent('{% url 'rooms' %}{{ room.name }}/')">
-            <th>{{ room.name }}</th>
-            <th>{{ room.floor__name }}</th>
-            <th>{{ room.building_section__name }}</th>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="filter-box">
+    <div class="filter-box-item">
+        <select id="floor-filter" onchange="filterRooms()">
+            <option value="all">Alle Etage</option>
+            {% for floor in floors %}
+                <option value="floor-id-{{ floor.id }}">{{ floor.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="filter-box-item">
+        <select id="building-section-filter" onchange="filterRooms()">
+            <option value="all">Alle Bauabschnitte</option>
+            {% for building_section in building_sections %}
+                <option value="building-section-id-{{ building_section.id }}">{{ building_section.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<div class="general-info-area">
+    <div class="general-info-box">
+        <h3>Anzahl an Räumen</h3>
+        <h2 class="number-of-rooms">{{ rooms|length }}</h2>
+    </div>
+    <div class="general-info-box">
+        <h3>Anzahl an Etagen</h3>
+        <h2 class="number-of-floors">{{ floors|length }}</h2>
+    </div>
+    <div class="general-info-box">
+        <h3>Anzahl an Bauabschnitten</h3>
+        <h2 class="number-of-building-sections">{{ building_sections|length }}</h2>
+    </div>
+</div>
+<div class="table">
+    <div class="table-head">
+        <div class="table-row">
+            <div class="table-row-element table-element-1">Name</div>
+            <div class="table-row-element table-element-2">Etage</div>
+            <div class="table-row-element table-element-3">Bauabschnitt</div>
+            <div class="table-row-element table-view-more-button" style="visibility: hidden;">Details</div>
+        </div>
+    </div>
+    <div class="table-body">
+        {% if rooms %}
+            {% for room in rooms %}
+            <div class="table-row table-row-link floor-id-{{ room.floor__id }} building-section-id-{{ room.building_section__id }}" tabindex="0" onclick="loadAjaxContent('{% url 'rooms' %}{{ room.name }}/')">
+                <div class="table-row-element table-element-1">{{ room.name }}</div>
+                <div class="table-row-element table-element-2">{{ room.floor__name }}</div>
+                <div class="table-row-element table-element-3">{{ room.building_section__name }}</div>
+                <div class="table-row-element table-view-more-button">Details</div>
+            </div>
+            {% endfor %}
+            <div class="table-row table-row-no-matches" style="display: none;">
+                <div class="table-row-element table-element-1">Keine Räume vorhanden</div>
+                <div class="table-row-element table-view-more-button" style="visibility: hidden;">Details</div>
+            </div>
+        {% else %}
+            <div class="table-row table-first-row table-last-row">
+                <div class="table-row-element table-element-1">Keine Räume vorhanden</div>
+                <div class="table-row-element table-view-more-button" style="visibility: hidden;">Details</div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+<script>
+    document.title ='Räume – SZUT Inventur Management';
+    $('head').append('<link rel="stylesheet" id="custom-css" href="{% static 'css/rooms.css' %}" />');
+
+    styleTable();
+
+    function styleTable() {
+        $('.table-body .table-row').each(function() {
+            $(this).removeClass('table-first-row table-last-row table-row-accent-color');
+        });
+        $('.table-body .table-row:visible:first').addClass('table-first-row');
+        $('.table-body .table-row:visible:last').addClass('table-last-row');
+        $('.table-body .table-row:visible:odd').addClass('table-row-accent-color');
+    }
+
+    function filterRooms() {
+        let floor = $('#floor-filter').val();
+        let building_section = $('#building-section-filter').val();
+        let matches = 0;
+
+        if (floor === 'all') {
+            floor = 'table-row';
+            $('.number-of-floors').text({{ floors|length }});
+        } else {
+            $('.number-of-floors').text('1');
+        }
+
+        if (building_section === 'all') {
+            building_section = 'table-row';
+            $('.number-of-building-sections').text({{ building_sections|length }});
+        } else {
+            $('.number-of-building-sections').text('1');
+        }
+
+        $('.table-body .table-row').each(function() {
+            if ($(this).hasClass(floor) && $(this).hasClass(building_section) || floor === 'all' && !$(this).hasClass('table-row-no-matches')) {
+                $(this).show();
+                matches++;
+            } else {
+                $(this).hide();
+            }
+        });
+
+        if (matches === 0) {
+            $('.table-body .table-row-no-matches').show();
+        } else {
+            $('.table-body .table-row-no-matches').hide();
+        }
+        $('.number-of-rooms').text(matches);
+        styleTable();
+    }
+</script>

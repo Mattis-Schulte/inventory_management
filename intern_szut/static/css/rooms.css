@@ -1,0 +1,30 @@
+.table-row-element:first-child {
+  flex: 1 1 0;
+}
+
+/* Media Queries */
+@media screen and (max-width: 620px) {
+  .general-info-area {
+    flex-wrap: wrap;
+  }
+}
+
+@media screen and (max-width: 530px) {
+  .table-view-more-button {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .general-info-area div:not(:first-child) {
+    display: none;
+  }
+
+  .table-row-element:not(:first-child):not(:nth-child(2)) {
+    display: none;
+  }
+
+  .filter-box-item:not(:first-child) {
+    display: none;
+  }
+}
