@@ -8,8 +8,8 @@
     <title>SZUT Inventur Management</title>
     <meta name="apple-mobile-web-app-title" content="SZUT Inventur">
     <meta name="application-name" content="SZUT Inventur">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1C1C1D" media="(prefers-color-scheme: dark)">
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/favicon/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon/favicon-32x32.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon/favicon-16x16.png' %}">
@@ -97,7 +97,8 @@
         <div class="nav-side-bar-overlay"></div>
         <div class="main-content-wrapper">
             <div id="load-content-error" style="display: none;">
-                <p>Ein Fehler ist aufgetreten!</p>
+                <h2>Ein Fehler ist aufgetreten!</h2>
+                <h3>Bitte lade die Seite neu oder versuche es später erneut</h3>
             </div>
 
             <div id="page-content" class="page-content">
