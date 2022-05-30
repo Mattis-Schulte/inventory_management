@@ -98,7 +98,7 @@
         }
 
         $('.table-body .table-row').each(function() {
-            if ($(this).hasClass(floor) && $(this).hasClass(building_section) || floor === 'all' && !$(this).hasClass('table-row-no-matches')) {
+            if ($(this).hasClass(floor) && $(this).hasClass(building_section) && !$(this).hasClass('table-row-no-matches')) {
                 $(this).show();
                 matches++;
             } else {

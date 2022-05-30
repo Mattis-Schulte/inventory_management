@@ -163,7 +163,7 @@ class Ticket(models.Model):
     title = models.CharField(verbose_name=_('Titel'), max_length=35)
     description = models.TextField(verbose_name=_('Beschreibung'), max_length=280, null=True, blank=True)
     status = models.IntegerField(verbose_name=_('Aktueller Status'), choices=((0, _('Offen')), (1, _('In Bearbeitung')), (2, _('Geschlossen'))))
-    created_at = models.DateTimeField(verbose_name=_('Erstellt am'), auto_now_add=True)
+    created_at = models.DateTimeField(verbose_name=_('Erstellt am'), auto_now=True)
     created_by = models.ForeignKey(MyUser, verbose_name=_('Erstellt von'), on_delete=models.CASCADE)
 
     def __str__(self):
@@ -172,12 +172,12 @@ class Ticket(models.Model):
 
 class TicketComment(models.Model):
     class Meta:
-        verbose_name = 'Ticket-Kommentar'
-        verbose_name_plural = 'Ticket-Kommentare'
+        verbose_name = 'Ticket-Antwort'
+        verbose_name_plural = 'Ticket-Antworten'
 
     ticket = models.ForeignKey(Ticket, verbose_name=_('Ticket'), on_delete=models.CASCADE, default=None)
-    comment = models.TextField(verbose_name=_('Kommentar'), max_length=280)
-    created_at = models.DateTimeField(verbose_name=_('Erstellt am'), auto_now_add=True)
+    comment = models.TextField(verbose_name=_('Antwort'), max_length=280)
+    created_at = models.DateTimeField(verbose_name=_('Erstellt am'), auto_now=True)
     created_by = models.ForeignKey(MyUser, verbose_name=_('Erstellt von'), on_delete=models.CASCADE)
 
     def __str__(self):
