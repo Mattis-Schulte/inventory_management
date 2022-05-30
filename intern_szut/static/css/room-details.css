@@ -1,0 +1,44 @@
+.table-row-element:first-child {
+  flex: 1.6 1.6 0;
+}
+
+.page-content > h1 {
+  margin-bottom: 0;
+}
+
+.page-content > h3 {
+  margin: 0 0 1rem 0.1rem;
+}
+
+/* Media Queries */
+@media screen and (max-width: 750px) {
+  .table-view-more-button {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 680px) {
+  .general-info-area {
+    flex-wrap: wrap;
+  }
+
+  .table-row-element:not(:first-child):not(:nth-child(2)) {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 580px) {
+  .filter-box-item:first-child {
+    display: none;
+  }
+
+  .general-info-area div:not(:first-child) {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .table-row-element i  {
+    display: none;
+  }
+}

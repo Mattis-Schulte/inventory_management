@@ -72,8 +72,8 @@ class MyUser(AbstractUser):
 
 class BuildingSection(models.Model):
     class Meta:
-        verbose_name = 'Bauabschnitt'
-        verbose_name_plural = 'Bauabschnitte'
+        verbose_name = _('Bauabschnitt')
+        verbose_name_plural = _('Bauabschnitte')
 
     name = models.CharField(verbose_name=_('Name'), max_length=35, unique=True)
     description = models.TextField(verbose_name=_('Beschreibung'), max_length=280, null=True, blank=True)
@@ -84,8 +84,8 @@ class BuildingSection(models.Model):
 
 class Floor(models.Model):
     class Meta:
-        verbose_name = 'Etage'
-        verbose_name_plural = 'Etagen'
+        verbose_name = _('Etage')
+        verbose_name_plural = _('Etagen')
 
     name = models.CharField(verbose_name=_('Name'), max_length=35, unique=True)
     description = models.TextField(verbose_name=_('Beschreibung'), max_length=280, null=True, blank=True)
@@ -96,12 +96,12 @@ class Floor(models.Model):
 
 class Room(models.Model):
     class Meta:
-        verbose_name = 'Raum'
-        verbose_name_plural = 'Räume'
+        verbose_name = _('Raum')
+        verbose_name_plural = _('Räume')
 
     name = models.CharField(verbose_name=_('Name'), max_length=35, unique=True)
-    building_section = models.ForeignKey(BuildingSection, verbose_name=_('Bauabschnitt'), on_delete=models.CASCADE, default=None)
-    floor = models.ForeignKey(Floor, verbose_name=_('Etage'), on_delete=models.CASCADE, default=None)
+    building_section = models.ForeignKey(BuildingSection, verbose_name=_('Bauabschnitt'), on_delete=models.PROTECT, default=None)
+    floor = models.ForeignKey(Floor, verbose_name=_('Etage'), on_delete=models.PROTECT, default=None)
     description = models.TextField(verbose_name=_('Beschreibung'), max_length=280, null=True, blank=True)
 
     def __str__(self):
@@ -110,8 +110,8 @@ class Room(models.Model):
 
 class DeviceCategory(models.Model):
     class Meta:
-        verbose_name = 'Gerätekategorie'
-        verbose_name_plural = 'Gerätekategorien'
+        verbose_name = _('Gerätekategorie')
+        verbose_name_plural = _('Gerätekategorien')
 
     name = models.CharField(verbose_name=_('Name'), max_length=35, unique=True)
     icon = models.CharField(verbose_name=_('Bootstrap-Icon (icons.getbootstrap.com)'), max_length=60, validators=[bootstrap_icon_validator], null=True, blank=True)
@@ -123,8 +123,8 @@ class DeviceCategory(models.Model):
 
 class DeviceManufacturer(models.Model):
     class Meta:
-        verbose_name = 'Gerätehersteller'
-        verbose_name_plural = 'Gerätehersteller'
+        verbose_name = _('Gerätehersteller')
+        verbose_name_plural = _('Gerätehersteller')
 
     name = models.CharField(verbose_name=_('Name'), max_length=35, unique=True)
     description = models.TextField(verbose_name=_('Beschreibung'), max_length=280, null=True, blank=True)
@@ -135,8 +135,13 @@ class DeviceManufacturer(models.Model):
 
 class Device(models.Model):
     class Meta:
-        verbose_name = 'Gerät'
-        verbose_name_plural = 'Geräte'
+        verbose_name = _('Gerät')
+        verbose_name_plural = _('Geräte')
+
+    class StatusOptions(models.IntegerChoices):
+        FULLY_FUNCTIONAL = 2, _('Voll funktionsfähig')
+        LIMITED_FUNCTIONALITY = 1, _('Eingeschränkt funktionsfähig')
+        NOT_FUNCTIONAL = 0, _('Nicht funktionsfähig')
 
     device_category = models.ForeignKey(DeviceCategory, verbose_name=_('Gerätekategorie'), on_delete=models.CASCADE, default=None)
     room = models.ForeignKey(Room, verbose_name=_('Raum'), on_delete=models.CASCADE, default=None)
@@ -144,10 +149,10 @@ class Device(models.Model):
     price = models.DecimalField(verbose_name=_('Preis'), max_digits=10, decimal_places=2, null=True, blank=True)
     device_manufacturer = models.ForeignKey(DeviceManufacturer, verbose_name=_('Gerätehersteller'), on_delete=models.CASCADE, null=True, blank=True)
     purchase_data = models.DateField(verbose_name=_('Anschaffungsdatum'), null=True, blank=True)
-    serial_number = models.CharField(verbose_name=_('Seriennummer'), max_length=35, unique=True, null=True, blank=True)
+    serial_number = models.CharField(verbose_name=_('Seriennummer'), max_length=35, null=True, blank=True)
     warranty_period_years = models.IntegerField(verbose_name=_('Garantiezeit in Jahren'), choices=[(i, i) for i in range(1, 100)], null=True, blank=True)
     warranty_period_months = models.IntegerField(verbose_name=_('Garantiezeit in Monaten'), choices=[(i, i) for i in range(1, 12)], null=True, blank=True)
-    status = models.IntegerField(verbose_name=_('Aktueller Status'), choices=((2, _('Voll funktionsfähig')), (1, _('Eingeschränkt funktionsfähig')), (0, _('Nicht funktionsfähig'))), null=True, blank=True)
+    status = models.IntegerField(verbose_name=_('Aktueller Status'), choices=StatusOptions.choices, null=True, blank=True)
     description = models.TextField(verbose_name=_('Beschreibung'), max_length=280, null=True, blank=True)
 
     def __str__(self):
@@ -156,13 +161,18 @@ class Device(models.Model):
 
 class Ticket(models.Model):
     class Meta:
-        verbose_name = 'Ticket'
-        verbose_name_plural = 'Tickets'
+        verbose_name = _('Ticket')
+        verbose_name_plural = _('Tickets')
+
+    class StatusOptions(models.IntegerChoices):
+        OPEN = 2, _('Offen')
+        IN_WORK = 1, _('In Bearbeitung')
+        CLOSED = 0, _('Geschlossen')
 
     device = models.ForeignKey(Device, verbose_name=_('Gerät'), on_delete=models.CASCADE, default=None)
     title = models.CharField(verbose_name=_('Titel'), max_length=35)
     description = models.TextField(verbose_name=_('Beschreibung'), max_length=280, null=True, blank=True)
-    status = models.IntegerField(verbose_name=_('Aktueller Status'), choices=((0, _('Offen')), (1, _('In Bearbeitung')), (2, _('Geschlossen'))))
+    status = models.IntegerField(verbose_name=_('Aktueller Status'), choices=StatusOptions.choices)
     created_at = models.DateTimeField(verbose_name=_('Erstellt am'), auto_now=True)
     created_by = models.ForeignKey(MyUser, verbose_name=_('Erstellt von'), on_delete=models.CASCADE)
 
@@ -172,8 +182,8 @@ class Ticket(models.Model):
 
 class TicketComment(models.Model):
     class Meta:
-        verbose_name = 'Ticket-Antwort'
-        verbose_name_plural = 'Ticket-Antworten'
+        verbose_name = _('Ticket-Antwort')
+        verbose_name_plural = _('Ticket-Antworten')
 
     ticket = models.ForeignKey(Ticket, verbose_name=_('Ticket'), on_delete=models.CASCADE, default=None)
     comment = models.TextField(verbose_name=_('Antwort'), max_length=280)

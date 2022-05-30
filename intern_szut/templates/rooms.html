@@ -3,7 +3,7 @@
 <div class="filter-box">
     <div class="filter-box-item">
         <select id="floor-filter" onchange="filterRooms()">
-            <option value="all">Alle Etage</option>
+            <option value="all">Alle Etagen</option>
             {% for floor in floors %}
                 <option value="floor-id-{{ floor.id }}">{{ floor.name }}</option>
             {% endfor %}
@@ -37,7 +37,7 @@
         <div class="table-row">
             <div class="table-row-element table-element-1">Name</div>
             <div class="table-row-element table-element-2">Etage</div>
-            <div class="table-row-element table-element-3">Bauabschnitt</div>
+            <div class="table-row-element table-element-3">Bau&shy;abschnitt</div>
             <div class="table-row-element table-view-more-button" style="visibility: hidden;">Details</div>
         </div>
     </div>
@@ -85,14 +85,14 @@
 
         if (floor === 'all') {
             floor = 'table-row';
-            $('.number-of-floors').text({{ floors|length }});
+            $('.number-of-floors').text($('#floor-filter option').length - 1);
         } else {
             $('.number-of-floors').text('1');
         }
 
         if (building_section === 'all') {
             building_section = 'table-row';
-            $('.number-of-building-sections').text({{ building_sections|length }});
+            $('.number-of-building-sections').text($('#building-section-filter option').length - 1);
         } else {
             $('.number-of-building-sections').text('1');
         }

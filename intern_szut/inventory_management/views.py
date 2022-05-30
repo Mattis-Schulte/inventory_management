@@ -1,12 +1,12 @@
 from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_protect
 from inventory_management import verify_login
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 
-from inventory_management.models import BuildingSection, Floor, Room
+from inventory_management.models import BuildingSection, Floor, Room, DeviceCategory, Device
 
 
 def search(request):
@@ -35,11 +35,27 @@ def rooms(request):
 
 
 def room_details(request, room_name):
+    room_data = Room.objects.filter(name=room_name).values('building_section__name', 'floor__name')[0]
+    device_categories = DeviceCategory.objects.order_by('name').all().values('name', 'id')
+    devices_statuses = []
+    for status in Device.StatusOptions:
+        devices_statuses_dict = {'id': Device.StatusOptions(status).value, 'label': Device.StatusOptions(status).label}
+        devices_statuses.append(devices_statuses_dict)
+    devices_statuses.append({'id': 'unknown', 'label': 'Unbekannt'})
+    devices_data = Device.objects.filter(room__name=room_name).order_by('device_category__name', 'name').values('device_category__name', 'device_category__id', 'device_category__icon', 'name', 'status', 'id')
+
+    for device in devices_data:
+        if device['status'] is not None:
+            device['status_label'] = Device.StatusOptions(device['status']).label
+        else:
+            device['status'] = devices_statuses[-1]['id']
+            device['status_label'] = devices_statuses[-1]['label']
+
     if Room.objects.filter(name=room_name).exists():
         if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-            return render(request, 'room_details.html', {'room_name': room_name})
+            return render(request, 'room_details.html', {'room_name': room_name, 'room_data': room_data, 'device_categories': list(device_categories), 'devices_statuses': list(devices_statuses), 'devices_data': list(devices_data)})
         else:
-            return render(request, 'index.html', {'current_page_category': 'rooms', 'current_page_file': 'room_details.html', 'room_name': room_name})
+            return render(request, 'index.html', {'current_page_category': 'rooms', 'current_page_file': 'room_details.html', 'room_name': room_name, 'room_data': room_data, 'device_categories': list(device_categories), 'devices_statuses': list(devices_statuses), 'devices_data': list(devices_data)})
     else:
         return redirect('rooms')
 

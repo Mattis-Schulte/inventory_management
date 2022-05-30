@@ -45,7 +45,7 @@
                             <img src="{% if user.profile_image_url %}{{ user.profile_image_url }}{% endif %}" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
                             <ul>
                                 <li><p>{{ user.get_full_name }}</p></li>
-                                <li><p>{% if user.is_superuser %}System-Admin{% elif user.is_admin %}Admin{% elif user.is_staff %}Lehrer{% elif not user.is_guest %}Schüler{% elif user.is_guest %}Gast{% endif %}</p></li>
+                                <li><p>{% if user.is_superuser %}System-Admin{% elif user.is_admin %}Admin{% elif user.is_staff %}Mitarbeiter{% elif not user.is_guest %}Schüler{% elif user.is_guest %}Gast{% endif %}</p></li>
                                 {% if user.is_staff or user.is_admin or user.is_superuser %}<li class="link-to-admin-page"><p><a target="_blank" rel="noopener noreferrer" href="/admin/" class="link-to-admin-page-a"><i class="bi bi-box-arrow-up-right"></i>Admin-Seite</a></p></li>{% endif %}
                                 <li>
                                     <a href="{% url 'account' %}" onclick="loadAjaxContent('{% url 'account' %}');return false">Mein Account</a>
