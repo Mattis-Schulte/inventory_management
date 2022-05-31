@@ -139,3 +139,35 @@ setHighlight = function(to_highlight) {
     }
     current_highlight = to_highlight;
 }
+
+function fetchFilter() {
+    var filter_values = [];
+    $('.filter-box-item').each(function() {
+        var filter_value = $(this).find('select').val();
+        var filter_id = $(this).find('select').attr('id');
+        filter_values.push({
+            'id': filter_id,
+            'value': filter_value
+        });
+    });
+    return filter_values;
+}
+
+function applyFilter() {
+    var filter_values = fetchFilter();
+
+    var filter_url = location.pathname;
+    var number_of_filters = filter_values.length - filter_values.filter(function(item) { return item.value === 'all' }).length;
+
+    if (number_of_filters > 0) {
+        filter_url += '?';
+        for (var i = 0; i < filter_values.length; i++) {
+            if (filter_values[i].value !== 'all') {
+                filter_url += filter_values[i].id + '=' + filter_values[i].value + '&';
+            }
+        }
+        filter_url = filter_url.substring(0, filter_url.length - 1);
+    }
+
+    loadAjaxContent(filter_url);
+}

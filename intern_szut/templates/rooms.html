@@ -21,18 +21,18 @@
 <div class="general-info-area">
     <div class="general-info-box">
         <h3>Anzahl an Räumen</h3>
-        <h2 class="number-of-rooms">{{ rooms|length }}</h2>
+        <h2 class="number-of-rooms">0</h2>
     </div>
     <div class="general-info-box">
         <h3>Anzahl an Etagen</h3>
-        <h2 class="number-of-floors">{{ floors|length }}</h2>
+        <h2 class="number-of-floors">0</h2>
     </div>
     <div class="general-info-box">
         <h3>Anzahl an Bauabschnitten</h3>
-        <h2 class="number-of-building-sections">{{ building_sections|length }}</h2>
+        <h2 class="number-of-building-sections">0</h2>
     </div>
 </div>
-<div class="table">
+<div class="table table-preload">
     <div class="table-head">
         <div class="table-row">
             <div class="table-row-element table-element-1">Name</div>
@@ -56,7 +56,7 @@
                 <div class="table-row-element table-view-more-button" style="visibility: hidden;">Details</div>
             </div>
         {% else %}
-            <div class="table-row table-first-row table-last-row">
+            <div class="table-row table-row-no-matches">
                 <div class="table-row-element table-element-1">Keine Räume vorhanden</div>
                 <div class="table-row-element table-view-more-button" style="visibility: hidden;">Details</div>
             </div>
@@ -67,7 +67,7 @@
     document.title ='Räume – SZUT Inventur Management';
     $('head').append('<link rel="stylesheet" id="custom-css" href="{% static 'css/rooms.css' %}" />');
 
-    styleTable();
+    filterRooms();
 
     function styleTable() {
         $('.table-body .table-row').each(function() {
@@ -114,4 +114,8 @@
         $('.number-of-rooms').text(matches);
         styleTable();
     }
+
+    $(document).ready(function() {
+        $('.table').removeClass('table-preload');
+    });
 </script>

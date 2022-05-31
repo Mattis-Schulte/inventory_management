@@ -421,16 +421,15 @@ a {
 .filter-box {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
   margin: 0 0 1rem 0;
+  max-width: 800px;
 }
 
 .filter-box-item {
   box-shadow: 0 2px 4px var(--shadow-color);
   border-radius: 1rem;
-}
-
-.filter-box-item {
-  margin-right: 1rem;
 }
 
 .filter-box-item select {
@@ -536,6 +535,10 @@ a {
   border-radius: 0.6rem;
   border: 1px solid var(--border-color-primary);
   white-space: nowrap;
+}
+
+.table-preload * {
+  transition: none !important;
 }
 
 /* Animations */

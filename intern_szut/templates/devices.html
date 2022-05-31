@@ -1,2 +1,115 @@
-<script>document.title ='Geräte – SZUT Inventur Management';</script>
-Geräte
+{% load static %}
+<h1>Geräte {{ room_name }}</h1>
+<div class="filter-box">
+    <div class="filter-box-item">
+        <select id="status-filter" onchange="applyFilter()">
+            <option value="all">Jeden Status</option>
+            {% for status in devices_statuses_data %}
+                <option value="device-status-id-{{ status.id }}">{{ status.label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="filter-box-item">
+        <select id="device-categories-filter" onchange="applyFilter()">
+            <option value="all">Alle Gerätekategorien</option>
+            {% for device_category in device_categories_data %}
+                <option value="device-category-id-{{ device_category.id }}">{{ device_category.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="filter-box-item">
+        <select id="device-manufacture-filter" onchange="applyFilter()">
+            <option value="all">Alle Hersteller</option>
+            {% for device_manufacture in device_manufacturers_data %}
+                <option value="device-manufacture-id-{{ device_manufacture.id }}">{{ device_manufacture.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="filter-box-item">
+        <select id="device-price-filter" onchange="applyFilter()">
+            <option value="all">Jeder Preis</option>
+            {% for price in price_steps %}
+                <option value="device-price-step-id-{{ price.id }}">{{ price.label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="filter-box-item">
+        <select id="device-warranty-filter" onchange="applyFilter()">
+            <option value="all">Jede Garantiezeit</option>
+            {% for remaining_warranty in remaining_warranty_steps %}
+                <option value="device-warranty-step-id-{{ remaining_warranty.id }}">{{ remaining_warranty.label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="filter-box-item">
+        <select id="device-purchase-date-filter" onchange="applyFilter()">
+            <option value="all">Beliebiges Anschaffungsdatum</option>
+            {% for date_of_purchase in date_of_purchase_steps %}
+                <option value="device-purchase-date-step-id-{{ date_of_purchase.id }}">{{ date_of_purchase.label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<div class="general-info-area">
+    <div class="general-info-box">
+        <h3>Anzahl an Geräten</h3>
+        <h2 class="number-of-devices">{{ unique_devices_count }}</h2>
+    </div>
+    <div class="general-info-box">
+        <h3>Anzahl an Räumen</h3>
+        <h2 class="number-of-device-categories">{{ unique_rooms_count }}</h2>
+    </div>
+    <div class="general-info-box">
+        <h3>Anzahl an Gerätekategorien</h3>
+        <h2 class="number-of-device-categories">{{ unique_device_categories }}</h2>
+    </div>
+    <div class="general-info-box">
+        <h3>Anzahl an Herstellern</h3>
+        <h2 class="number-of-device-categories">{{ unique_device_manufacturers }}</h2>
+    </div>
+</div>
+<div class="table table-preload">
+    <div class="table-head">
+        <div class="table-row">
+            <div class="table-row-element table-element-1">Geräte&shy;kategorie</div>
+            <div class="table-row-element table-element-2">Name</div>
+            <div class="table-row-element table-element-3">Status</div>
+            <div class="table-row-element table-view-more-button" style="visibility: hidden;">Details</div>
+        </div>
+    </div>
+    <div class="table-body">
+        {% if devices_data %}
+            {% for device in devices_data %}
+            <div class="table-row table-row-link device-category-id-{{ device.device_category__id }} device-status-id-{{ device.status }}" tabindex="0" onclick="loadAjaxContent('{% url 'devices' %}device-{{ device.id }}/')">
+                <div class="table-row-element table-element-1">{% if device.device_category__icon %}<i class="{{ device.device_category__icon }}"></i>{% endif %}{{ device.device_category__name }}</div>
+                <div class="table-row-element table-element-2">{{ device.name }}</div>
+                <div class="table-row-element table-element-3">{{ device.status_label }}</div>
+                <div class="table-row-element table-view-more-button">Details</div>
+            </div>
+            {% endfor %}
+            <div class="table-row table-row-no-matches" style="display: none;">
+                <div class="table-row-element table-element-1">Keine Geräte vorhanden</div>
+                <div class="table-row-element table-view-more-button" style="visibility: hidden;">Details</div>
+            </div>
+        {% else %}
+            <div class="table-row table-row-no-matches">
+                <div class="table-row-element table-element-1">Keine Geräte vorhanden</div>
+                <div class="table-row-element table-view-more-button" style="visibility: hidden;">Details</div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+<script>
+    document.title ='Geräte {{ room_name }} – SZUT Inventur Management';
+    $('head').append('<link rel="stylesheet" id="custom-css" href="{% static 'css/rooms.css' %}" />');
+
+    $(document).ready(function() {
+        filter_url_parts = location.search.substring(1).split('&');
+        for (var i = 0; i < filter_url_parts.length; i++) {
+            var filter_value_parts = filter_url_parts[i].split('=');
+            if (filter_value_parts[0]) {
+                $('#' + filter_value_parts[0]).val(filter_value_parts[1]);
+            }
+        }
+    });
+</script>
