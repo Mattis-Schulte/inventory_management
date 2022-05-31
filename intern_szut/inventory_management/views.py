@@ -81,7 +81,7 @@ def room_details(request, room_name):
 
         devices_data_temp, number_of_filters_applied = filter_devices.FilterDevices.filter_devices_main(devices_data, request.GET, devices_statuses_data, device_categories_data, device_manufacturers_data)
         if devices_data_temp is None:
-            return redirect('rooms')
+            return redirect('room_details', room_name=room_name)
         else:
             devices_data = devices_data_temp
 

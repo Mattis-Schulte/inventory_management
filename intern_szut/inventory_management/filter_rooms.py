@@ -20,8 +20,8 @@ class FilterRooms:
                             id=request_data).exists():
                         room_data = room_data.filter(**{_filter['result']: request_data})
                     else:
-                        return None
+                        return None, number_of_filters_applied
                 else:
-                    return None
+                    return None, number_of_filters_applied
 
         return room_data, number_of_filters_applied
