@@ -18,22 +18,24 @@
 }
 
 @media screen and (max-width: 680px) {
-  .table-row-element:not(:first-child):not(:nth-child(2)) {
+  .table-row-element:nth-child(n+3) {
     display: none;
   }
 }
 
-@media screen and (max-width: 580px) {
-  .filter-box-item:first-child {
-    display: none;
-  }
-
+@media screen and (max-width: 630px) {
   .general-info-area div:not(:first-child) {
     display: none;
   }
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 480px) {
+  .filter-box-item:nth-child(n+3) {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 440px) {
   .table-row-element i  {
     display: none;
   }

@@ -1,8 +1,9 @@
 {% load static %}
 <h1>Räume</h1>
+{% if number_of_filters_applied > 0 %}<h3>{{ number_of_filters_applied }} Filter angewendet</h3>{% else %}<h3>Keine Filter angewendet</h3>{% endif %}
 <div class="filter-box">
     <div class="filter-box-item">
-        <select id="floor-filter" onchange="filterRooms()">
+        <select id="floor-filter" onchange="applyFilter()">
             <option value="all">Alle Etagen</option>
             {% for floor in floors %}
                 <option value="floor-id-{{ floor.id }}">{{ floor.name }}</option>
@@ -10,7 +11,7 @@
         </select>
     </div>
     <div class="filter-box-item">
-        <select id="building-section-filter" onchange="filterRooms()">
+        <select id="building-section-filter" onchange="applyFilter()">
             <option value="all">Alle Bauabschnitte</option>
             {% for building_section in building_sections %}
                 <option value="building-section-id-{{ building_section.id }}">{{ building_section.name }}</option>
@@ -21,15 +22,15 @@
 <div class="general-info-area">
     <div class="general-info-box">
         <h3>Anzahl an Räumen</h3>
-        <h2 class="number-of-rooms">0</h2>
+        <h2 class="number-of-rooms">{{ unique_rooms_count }}</h2>
     </div>
     <div class="general-info-box">
         <h3>Anzahl an Etagen</h3>
-        <h2 class="number-of-floors">0</h2>
+        <h2 class="number-of-floors">{{ unique_floors_count }}</h2>
     </div>
     <div class="general-info-box">
         <h3>Anzahl an Bauabschnitten</h3>
-        <h2 class="number-of-building-sections">0</h2>
+        <h2 class="number-of-building-sections">{{ unique_building_sections_count }}</h2>
     </div>
 </div>
 <div class="table table-preload">
@@ -51,10 +52,6 @@
                 <div class="table-row-element table-view-more-button">Details</div>
             </div>
             {% endfor %}
-            <div class="table-row table-row-no-matches" style="display: none;">
-                <div class="table-row-element table-element-1">Keine Räume vorhanden</div>
-                <div class="table-row-element table-view-more-button" style="visibility: hidden;">Details</div>
-            </div>
         {% else %}
             <div class="table-row table-row-no-matches">
                 <div class="table-row-element table-element-1">Keine Räume vorhanden</div>
@@ -67,55 +64,13 @@
     document.title ='Räume – SZUT Inventur Management';
     $('head').append('<link rel="stylesheet" id="custom-css" href="{% static 'css/rooms.css' %}" />');
 
-    filterRooms();
-
-    function styleTable() {
-        $('.table-body .table-row').each(function() {
-            $(this).removeClass('table-first-row table-last-row table-row-accent-color');
-        });
-        $('.table-body .table-row:visible:first').addClass('table-first-row');
-        $('.table-body .table-row:visible:last').addClass('table-last-row');
-        $('.table-body .table-row:visible:odd').addClass('table-row-accent-color');
-    }
-
-    function filterRooms() {
-        let floor = $('#floor-filter').val();
-        let building_section = $('#building-section-filter').val();
-        let matches = 0;
-
-        if (floor === 'all') {
-            floor = 'table-row';
-            $('.number-of-floors').text($('#floor-filter option').length - 1);
-        } else {
-            $('.number-of-floors').text('1');
-        }
-
-        if (building_section === 'all') {
-            building_section = 'table-row';
-            $('.number-of-building-sections').text($('#building-section-filter option').length - 1);
-        } else {
-            $('.number-of-building-sections').text('1');
-        }
-
-        $('.table-body .table-row').each(function() {
-            if ($(this).hasClass(floor) && $(this).hasClass(building_section) && !$(this).hasClass('table-row-no-matches')) {
-                $(this).show();
-                matches++;
-            } else {
-                $(this).hide();
-            }
-        });
-
-        if (matches === 0) {
-            $('.table-body .table-row-no-matches').show();
-        } else {
-            $('.table-body .table-row-no-matches').hide();
-        }
-        $('.number-of-rooms').text(matches);
-        styleTable();
-    }
-
     $(document).ready(function() {
-        $('.table').removeClass('table-preload');
+        filter_url_parts = location.search.substring(1).split('&');
+        for (var i = 0; i < filter_url_parts.length; i++) {
+            var filter_value_parts = filter_url_parts[i].split('=');
+            if (filter_value_parts[0]) {
+                $('#' + filter_value_parts[0]).val(filter_value_parts[1]);
+            }
+        }
     });
 </script>

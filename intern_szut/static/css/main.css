@@ -324,11 +324,11 @@ a {
   bottom: 0;
   min-width: var(--side-nav-min-width);
   max-width: var(--side-nav-max-width);
-  flex-basis: var(--side-nav-width);
   background-color: var(--color-primary);
   z-index: 9;
   padding: var(--top-bar-inner-margin);
   overflow-y: auto;
+  flex: 2 0 var(--side-nav-width);
 }
 
 .nav-side-bar a {
@@ -492,29 +492,29 @@ a {
   transition: background-color 0.2s ease-in-out;
 }
 
-.table-row-element i {
-  font-size: var(--text-size-big);
-  margin-right: 0.8rem;
-}
-
-.table-first-row {
+.table-body .table-row:first-child {
   border-radius: 1rem 1rem 0 0;
 }
 
-.table-last-row {
+.table-body .table-row:last-child {
   border-radius: 0 0 1rem 1rem;
 }
 
-.table-first-row.table-last-row  {
+.table-body .table-row:first-child.table-row:last-child {
   border-radius: 1rem;
 }
 
-.table-body .table-row:not(.table-last-row) {
+.table-body .table-row:not(.table-row:last-child) {
   border-bottom: 1px solid var(--border-color-primary);
 }
 
-.table-body .table-row-accent-color {
+.table-body .table-row:nth-child(even) {
   background-color: var(--table-row-color-secondary);
+}
+
+.table-row-element i {
+  font-size: var(--text-size-big);
+  margin-right: 0.8rem;
 }
 
 .table-row-link {
@@ -535,10 +535,6 @@ a {
   border-radius: 0.6rem;
   border: 1px solid var(--border-color-primary);
   white-space: nowrap;
-}
-
-.table-preload * {
-  transition: none !important;
 }
 
 /* Animations */

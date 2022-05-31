@@ -2,6 +2,14 @@
   flex: 1 1 0;
 }
 
+.page-content > h1 {
+  margin-bottom: 0;
+}
+
+.page-content > h3 {
+  margin: 0 0 1rem 0.1rem;
+}
+
 /* Media Queries */
 @media screen and (max-width: 620px) {
   .general-info-area {
@@ -9,7 +17,7 @@
   }
 }
 
-@media screen and (max-width: 530px) {
+@media screen and (max-width: 550px) {
   .table-view-more-button {
     display: none;
   }
@@ -20,11 +28,7 @@
     display: none;
   }
 
-  .table-row-element:not(:first-child):not(:nth-child(2)) {
-    display: none;
-  }
-
-  .filter-box-item:not(:first-child) {
+  .table-row-element:nth-child(n+3) {
     display: none;
   }
 }
