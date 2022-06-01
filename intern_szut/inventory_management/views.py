@@ -2,38 +2,11 @@ from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_protect
-from inventory_management import filter_rooms, filter_devices, verify_login
+from inventory_management import filter_rooms, filter_devices, verify_login, get_choices
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
-from django.utils.translation import gettext_lazy as _
 
 from inventory_management.models import BuildingSection, Floor, Room, DeviceCategory, DeviceManufacturer, Device
-
-
-def get_enum_choices(enum_data, append_unknown=False):
-    unknown = {'id': 'unknown', 'label': _('Unbekannter Status')}
-    enum_choices = []
-
-    for status in enum_data:
-        devices_statuses_dict = {'id': enum_data(status).value, 'label': enum_data(status).label}
-        enum_choices.append(devices_statuses_dict)
-
-    if append_unknown:
-        enum_choices.append(unknown)
-
-    return enum_choices
-
-
-def make_labels_readable(enum_data, status_options, label_key: str):
-    label_name = label_key + '_label'
-    for data_set in enum_data:
-        if data_set[label_key] is not None:
-            data_set[label_name] = status_options(data_set[label_key]).label
-        else:
-            data_set[label_key] = 'unknown'
-            data_set[label_name] = _('Unbekannt')
-
-    return enum_data
 
 
 def search(request):
@@ -76,7 +49,7 @@ def room_details(request, room_name):
         room_data = Room.objects.filter(name=room_name).values('building_section__name', 'floor__name', 'name')[0]
         device_categories_data = DeviceCategory.objects.order_by('name').all().values('name', 'id')
         devices_data = Device.objects.filter(room__name=room_name).order_by('device_category__name', 'name').values('device_category__name', 'device_category__icon', 'room__name', 'price', 'device_manufacturer', 'purchase_data', 'warranty_period_years', 'warranty_period_months', 'name', 'status', 'id')
-        devices_statuses_data = get_enum_choices(Device.StatusOptions, True)
+        devices_statuses_data = get_choices.GetChoices.get_enum_choices(Device.StatusOptions, True)
         device_manufacturers_data = DeviceManufacturer.objects.order_by('name').all().values('name', 'id')
 
         devices_data_temp, number_of_filters_applied = filter_devices.FilterDevices.filter_devices_main(devices_data, request.GET, devices_statuses_data, device_categories_data, device_manufacturers_data)
@@ -85,7 +58,7 @@ def room_details(request, room_name):
         else:
             devices_data = devices_data_temp
 
-        devices_data = make_labels_readable(devices_data, Device.StatusOptions, 'status')
+        devices_data = get_choices.GetChoices.make_labels_readable(devices_data, Device.StatusOptions, 'status')
         unique_devices_count = devices_data.count()
         unique_device_categories = devices_data.values('device_category__id').distinct().count()
         unique_device_manufacturers = devices_data.values('device_manufacturer__id').distinct().count()
@@ -102,7 +75,7 @@ def room_details(request, room_name):
 def devices(request):
     device_categories_data = DeviceCategory.objects.order_by('name').all().values('name', 'id')
     devices_data = Device.objects.order_by('device_category__name', 'name').all().values('device_category__name', 'device_category__icon', 'room__name', 'price', 'device_manufacturer', 'purchase_data', 'warranty_period_years', 'warranty_period_months', 'name', 'status', 'id')
-    devices_statuses_data = get_enum_choices(Device.StatusOptions, True)
+    devices_statuses_data = get_choices.GetChoices.get_enum_choices(Device.StatusOptions, True)
     device_manufacturers_data = DeviceManufacturer.objects.order_by('name').all().values('name', 'id')
 
     devices_data_temp, number_of_filters_applied = filter_devices.FilterDevices.filter_devices_main(devices_data, request.GET, devices_statuses_data, device_categories_data, device_manufacturers_data)
@@ -111,7 +84,7 @@ def devices(request):
     else:
         devices_data = devices_data_temp
 
-    devices_data = make_labels_readable(devices_data, Device.StatusOptions, 'status')
+    devices_data = get_choices.GetChoices.make_labels_readable(devices_data, Device.StatusOptions, 'status')
     unique_devices_count = devices_data.count()
     unique_rooms_count = devices_data.values('room__id').distinct().count()
     unique_device_categories = devices_data.values('device_category__id').distinct().count()
@@ -121,6 +94,19 @@ def devices(request):
         return render(request, 'devices.html', {'device_categories_data': list(device_categories_data), 'devices_statuses_data': list(devices_statuses_data), 'devices_data': list(devices_data), 'device_manufacturers_data': list(device_manufacturers_data), 'price_steps': filter_devices.FilterDevices.price_steps, 'remaining_warranty_steps': filter_devices.FilterDevices.remaining_warranty_steps, 'date_of_purchase_steps': filter_devices.FilterDevices.date_of_purchase_steps, 'unique_devices_count': unique_devices_count, 'unique_rooms_count': unique_rooms_count, 'unique_device_categories': unique_device_categories, 'unique_device_manufacturers': unique_device_manufacturers, 'number_of_filters_applied': number_of_filters_applied})
     else:
         return render(request, 'index.html', {'current_page_category': 'devices', 'current_page_file': 'devices.html', 'device_categories_data': list(device_categories_data), 'devices_statuses_data': list(devices_statuses_data), 'devices_data': list(devices_data), 'device_manufacturers_data': list(device_manufacturers_data), 'price_steps': filter_devices.FilterDevices.price_steps, 'remaining_warranty_steps': filter_devices.FilterDevices.remaining_warranty_steps, 'date_of_purchase_steps': filter_devices.FilterDevices.date_of_purchase_steps, 'unique_devices_count': unique_devices_count, 'unique_rooms_count': unique_rooms_count, 'unique_device_categories': unique_device_categories, 'unique_device_manufacturers': unique_device_manufacturers, 'number_of_filters_applied': number_of_filters_applied})
+
+
+def device_details(request, device_id):
+    if Device.objects.filter(id=device_id).exists():
+        device_data = Device.objects.filter(id=device_id).values('device_category__name', 'device_category__icon', 'room__name', 'price', 'device_manufacturer__name', 'purchase_data', 'warranty_period_years', 'warranty_period_months', 'serial_number', 'name', 'description', 'status')
+        device_data = get_choices.GetChoices.make_labels_readable(device_data, Device.StatusOptions, 'status')[0]
+
+        if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+            return render(request, 'device_details.html', {'device_data': device_data})
+        else:
+            return render(request, 'index.html', {'current_page_category': 'devices', 'current_page_file': 'device_details.html', 'device_data': device_data})
+    else:
+        return redirect('devices')
 
 
 def ticket_management(request):

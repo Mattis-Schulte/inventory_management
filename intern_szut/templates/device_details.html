@@ -1,0 +1,53 @@
+{% load static %}
+<h1>{{ device_data.name }}</h1>
+<div class="general-info-area">
+    <div class="general-info-box">
+        <h3>Standort des Gerätes</h3>
+        <h2 class="number-of-devices">Raum {{ device_data.room__name }}</h2>
+    </div>
+</div>
+<div class="table">
+    <div class="table-head">
+        <div class="table-row">
+            <div class="table-row-element table-element-1">Geräte&shy;eigenschaften</div>
+        </div>
+    </div>
+    <div class="table-body">
+        <div class="table-row" tabindex="0">
+            <div class="table-row-element table-element-1">Geräte&shy;kategorie</div>
+            <div class="table-row-element table-element-2">{% if device_data.device_category__icon %}<i class="{{ device_data.device_category__icon }}"></i>{% endif %}{{ device_data.device_category__name }}</div>
+        </div>
+        <div class="table-row" tabindex="0">
+            <div class="table-row-element table-element-1">Aktueller Status</div>
+            <div class="table-row-element table-element-2">{{ device_data.status_label }}</div>
+        </div>
+        <div class="table-row" tabindex="0">
+            <div class="table-row-element table-element-1">Hersteller</div>
+            <div class="table-row-element table-element-2">{% if device_data.device_manufacturer__name %}{{ device_data.device_manufacturer__name }}{% else %}Unbekannt{% endif %}</div>
+        </div>
+        <div class="table-row" tabindex="0">
+            <div class="table-row-element table-element-1">Anschaffungs&shy;datum</div>
+            <div class="table-row-element table-element-2">{% if device_data.purchase_data %}{{ device_data.purchase_data }}{% else %}Unbekannt{% endif %}</div>
+        </div>
+        <div class="table-row" tabindex="0">
+            <div class="table-row-element table-element-1">Garantie&shy;zeit vom Anschaffungs&shy;datum</div>
+            <div class="table-row-element table-element-2">{% if device_data.warranty_period_years or device_data.warranty_period_months %}{% if device_data.warranty_period_years %}{{ device_data.warranty_period_years }} Jahre{% endif %}{% if device_data.warranty_period_years %}{% if device_data.warranty_period_years %}, {{ device_data.warranty_period_months }} Monate{% else %}{{ device_data.warranty_period_months }} Monate{% endif %}{% endif %}{% else %}Unbekannt{% endif %}</div>
+        </div>
+        <div class="table-row" tabindex="0">
+            <div class="table-row-element table-element-1">Serien&shy;nummer</div>
+            <div class="table-row-element table-element-2">{% if device_data.serial_number %}{{ device_data.serial_number }}{% else %}Unbekannt{% endif %}</div>
+        </div>
+        <div class="table-row" tabindex="0">
+            <div class="table-row-element table-element-1">Preis</div>
+            <div class="table-row-element table-element-2">{% if device_data.price %}{{ device_data.price }} €{% else %}Unbekannt{% endif %}</div>
+        </div>
+    </div>
+</div>
+{% if device_data.description %}
+    <h3 class="subheader">Beschreibung</h3>
+    <h3>{{ device_data.description }}</h3>
+{% endif %}
+<script>
+    document.title ='{{ device_data.name }} – SZUT Inventur Management';
+    $('head').append('<link rel="stylesheet" id="custom-css" href="{% static 'css/device-details.css' %}" />');
+</script>

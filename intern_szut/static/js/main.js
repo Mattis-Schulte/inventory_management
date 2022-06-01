@@ -103,7 +103,7 @@ loadAjaxContent = function(page, push_state=true) {
 }
 
 $(window).bind("popstate", function () {
-  loadAjaxContent(location.pathname, false);
+  loadAjaxContent(location.pathname + location.search, false);
 });
 
 logout = function(url) {

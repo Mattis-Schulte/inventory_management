@@ -24,6 +24,7 @@
             {% for device_manufacture in device_manufacturers_data %}
                 <option value="device-manufacture-id-{{ device_manufacture.id }}">{{ device_manufacture.name }}</option>
             {% endfor %}
+            <option value="unknown">Unbekannter Hersteller</option>
         </select>
     </div>
     <div class="filter-box-item">
@@ -82,7 +83,7 @@
     <div class="table-body">
         {% if devices_data %}
             {% for device in devices_data %}
-            <div class="table-row table-row-link device-category-id-{{ device.device_category__id }} device-status-id-{{ device.status }}" tabindex="0" onclick="loadAjaxContent('{% url 'devices' %}device-{{ device.id }}/')">
+            <div class="table-row table-row-link" tabindex="0" onclick="loadAjaxContent('{% url 'devices' %}device-{{ device.id }}/')">
                 <div class="table-row-element table-element-1">{% if device.device_category__icon %}<i class="{{ device.device_category__icon }}"></i>{% endif %}{{ device.device_category__name }}</div>
                 <div class="table-row-element table-element-2">{{ device.name }}</div>
                 <div class="table-row-element table-element-3">{{ device.room__name }}</div>

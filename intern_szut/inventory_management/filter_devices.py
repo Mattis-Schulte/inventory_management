@@ -37,7 +37,7 @@ class FilterDevices:
     date_of_purchase_steps = [
         {'id': 0, 'label': _('Letzten 3 Monaten'), 'max_value': 3},
         {'id': 1, 'label': _('Letzten 6 Monaten'), 'max_value': 6},
-        {'id': 2, 'label': _('Letztes 1 Jahr'), 'max_value': 12},
+        {'id': 2, 'label': _('Letztes Jahr'), 'max_value': 12},
         {'id': 3, 'label': _('Letzten 3 Jahre'), 'max_value': 36},
         {'id': 4, 'label': _('Letzten 5 Jahre'), 'max_value': 60},
         {'id': 5, 'label': _('Letzten 10 Jahre'), 'max_value': 120},
@@ -77,7 +77,7 @@ class FilterDevices:
             if request_data is not None:
                 number_of_filters_applied += 1
                 request_data = request_data.replace(_filter['value'], '')
-                if request_data == 'unknown':
+                if request_data == 'unknown' and _filter['name'] != 'device-categories-filter':
                     if _filter['name'] == 'device-warranty-filter':
                         devices_data = devices_data.filter(Q(purchase_data__isnull=True) | Q(warranty_period_years__isnull=True) & Q(warranty_period_months__isnull=True))
                     else:

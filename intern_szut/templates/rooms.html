@@ -45,7 +45,7 @@
     <div class="table-body">
         {% if rooms %}
             {% for room in rooms %}
-            <div class="table-row table-row-link floor-id-{{ room.floor__id }} building-section-id-{{ room.building_section__id }}" tabindex="0" onclick="loadAjaxContent('{% url 'rooms' %}{{ room.name }}/')">
+            <div class="table-row table-row-link" tabindex="0" onclick="loadAjaxContent('{% url 'rooms' %}{{ room.name }}/')">
                 <div class="table-row-element table-element-1">{{ room.name }}</div>
                 <div class="table-row-element table-element-2">{{ room.floor__name }}</div>
                 <div class="table-row-element table-element-3">{{ room.building_section__name }}</div>
