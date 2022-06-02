@@ -1,4 +1,57 @@
-<h3>{{ tickets_data }}, {{ perms.inventory_management.add_ticket }}</h3>
+{% load static %}
+{% if user.is_authenticated %}
+    <h1>Meine Tickets</h1>
+    <div class="ticket-boxes-area">
+        <div class="ticket-box create-new-ticket">
+            <i class="bi bi-plus-lg"></i>
+            <h3>Neues Ticket erstellen</h3>
+        </div>
+        {% for my_ticket in tickets_data %}
+            {% if my_ticket.created_by__id == user.id %}
+                <div class="ticket-box created-ticket" onclick="loadAjaxContent('{% url 'ticket-management' %}ticket-{{ my_ticket.id }}/')">
+                    <h2>{{ my_ticket.title }}</h2>
+                    {% if my_ticket.description %}<p>{{ my_ticket.description }}</p>{% endif %}
+                    <p>{{ my_ticket.status_label }}</p>
+                    <img src="{% if my_ticket.created_by__profile_image_url %}{{ my_ticket.created_by__profile_image_url }}{% endif %}" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
+                    <p>{{ my_ticket.created_by__first_name }} {{ my_ticket.created_by__last_name }}</p>
+                    {% if user.use_12_hour_time_format %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"h:i a" }}</p>{% else %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"H:i" }}</p>{% endif %}
+                    <a href="{{ my_ticket.url }}">Ticket anzeigen</a>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}
+<h1>Offene Tickets</h1>
+<div class="ticket-boxes-area">
+    <div class="ticket-box create-new-ticket">
+        {% for my_ticket in tickets_data %}
+            {% if my_ticket.status == 2 %}
+                <div class="ticket-box created-ticket" onclick="loadAjaxContent('{% url 'ticket-management' %}ticket-{{ my_ticket.id }}/')">
+                    <h2>{{ my_ticket.title }}</h2>
+                    {% if my_ticket.description %}<p>{{ my_ticket.description }}</p>{% endif %}
+                    <p>{{ my_ticket.status_label }}</p>
+                    <img src="{% if my_ticket.created_by__profile_image_url %}{{ my_ticket.created_by__profile_image_url }}{% endif %}" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
+                    <p>{{ my_ticket.created_by__first_name }} {{ my_ticket.created_by__last_name }}</p>
+                    {% if user.use_12_hour_time_format %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"h:i a" }}</p>{% else %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"H:i" }}</p>{% endif %}
+                    <a href="{{ my_ticket.url }}">Ticket anzeigen</a>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+<h1>Alle Tickets</h1>
+    <div class="ticket-box create-new-ticket">
+        {% for my_ticket in tickets_data %}
+            <div class="ticket-box created-ticket" onclick="loadAjaxContent('{% url 'ticket-management' %}ticket-{{ my_ticket.id }}/')">
+                <h2>{{ my_ticket.title }}</h2>
+                {% if my_ticket.description %}<p>{{ my_ticket.description }}</p>{% endif %}
+                <p>{{ my_ticket.status_label }}</p>
+                <img src="{% if my_ticket.created_by__profile_image_url %}{{ my_ticket.created_by__profile_image_url }}{% endif %}" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
+                <p>{{ my_ticket.created_by__first_name }} {{ my_ticket.created_by__last_name }}</p>
+                {% if user.use_12_hour_time_format %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"h:i a" }}</p>{% else %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"H:i" }}</p>{% endif %}
+                <a href="{{ my_ticket.url }}">Ticket anzeigen</a>
+            </div>
+        {% endfor %}
+    </div>
 <script>
     document.title ='Ticket-System – SZUT Inventur Management';
 </script>

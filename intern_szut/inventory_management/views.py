@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_protect
-from inventory_management import filter_rooms, filter_devices, verify_login, get_choices
+from inventory_management import filter_rooms, filter_devices, verify_login, get_choices, truncate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 
@@ -110,14 +110,15 @@ def device_details(request, device_id):
 
 
 def ticket_management(request):
-    tickets_data = Ticket.objects.order_by('last_change_at').all().values('id', 'title', 'description', 'status', 'created_at', 'created_by__first_name', 'created_by__last_name', 'last_change_at')
+    tickets_data = Ticket.objects.order_by('last_change_at').all().values('id', 'title', 'description', 'status', 'created_by__id', 'created_by__first_name', 'created_by__last_name', 'created_by__profile_image_url', 'last_change_at')
+    tickets_data = get_choices.GetChoices.make_labels_readable(tickets_data, Ticket.StatusOptions, 'status')
+    tickets_data = truncate.Truncate.truncate_data(tickets_data, 'description', 80)
     tickets_statuses_data = get_choices.GetChoices.get_enum_choices(Ticket.StatusOptions)
-    tickets_comments = TicketComment.objects.order_by('created_by').all().values('id', 'ticket__id', 'ticket__title', 'created_at', 'created_by__first_name', 'created_by__last_name', 'comment')
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-        return render(request, 'ticket-management.html', {'tickets_data': list(tickets_data), 'tickets_statuses_data': list(tickets_statuses_data), 'tickets_comments': list(tickets_comments)})
+        return render(request, 'ticket-management.html', {'tickets_data': list(tickets_data), 'tickets_statuses_data': list(tickets_statuses_data)})
     else:
-        return render(request, 'index.html', {'current_page_category': 'ticket-management', 'current_page_file': 'ticket-management.html', 'tickets_data': list(tickets_data), 'tickets_statuses_data': list(tickets_statuses_data), 'tickets_comments': list(tickets_comments)})
+        return render(request, 'index.html', {'current_page_category': 'ticket-management', 'current_page_file': 'ticket-management.html', 'tickets_data': list(tickets_data), 'tickets_statuses_data': list(tickets_statuses_data)})
 
 
 def account(request):
