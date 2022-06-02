@@ -6,7 +6,7 @@ from inventory_management import filter_rooms, filter_devices, verify_login, get
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 
-from inventory_management.models import BuildingSection, Floor, Room, DeviceCategory, DeviceManufacturer, Device
+from inventory_management.models import BuildingSection, Floor, Room, DeviceCategory, DeviceManufacturer, Device, Ticket, TicketComment
 
 
 def search(request):
@@ -110,14 +110,19 @@ def device_details(request, device_id):
 
 
 def ticket_management(request):
+    tickets_data = Ticket.objects.order_by('last_change_at').all().values('id', 'title', 'description', 'status', 'created_at', 'created_by__first_name', 'created_by__last_name', 'last_change_at')
+    tickets_statuses_data = get_choices.GetChoices.get_enum_choices(Ticket.StatusOptions)
+    tickets_comments = TicketComment.objects.order_by('created_by').all().values('id', 'ticket__id', 'ticket__title', 'created_at', 'created_by__first_name', 'created_by__last_name', 'comment')
+
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-        return render(request, 'ticket-management.html')
+        return render(request, 'ticket-management.html', {'tickets_data': list(tickets_data), 'tickets_statuses_data': list(tickets_statuses_data), 'tickets_comments': list(tickets_comments)})
     else:
-        return render(request, 'index.html', {'current_page_category': 'ticket-management', 'current_page_file': 'ticket-management.html'})
+        return render(request, 'index.html', {'current_page_category': 'ticket-management', 'current_page_file': 'ticket-management.html', 'tickets_data': list(tickets_data), 'tickets_statuses_data': list(tickets_statuses_data), 'tickets_comments': list(tickets_comments)})
 
 
 def account(request):
     if request.user.is_authenticated:
+        print(request.user.has_perm('inventory_management.add_ticket'))
         if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
             return render(request, 'account.html')
         else:

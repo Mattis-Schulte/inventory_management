@@ -30,7 +30,7 @@ class FilterDevices:
         {'id': 3, 'label': _('Unter 3 Jahre'), 'max_value': 36},
         {'id': 4, 'label': _('Unter 5 Jahre'), 'max_value': 60},
         {'id': 5, 'label': _('Unter 10 Jahre'), 'max_value': 120},
-        {'id': 6, 'label': _('Jede Restgarantie'), 'max_value': None},
+        {'id': 6, 'label': _('Jede gültige Garantie'), 'max_value': None},
         {'id': 7, 'label': _('Abgelaufene Garantie'), 'max_value': None},
         {'id': 'unknown', 'label': _('Unbekannte Garantiezeit'), 'max_value': None}
     ]

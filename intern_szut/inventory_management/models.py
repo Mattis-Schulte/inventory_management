@@ -63,12 +63,6 @@ class MyUser(AbstractUser):
     def __str__(self):
         return self.username
 
-    def has_perm(self, perm, obj=None):
-        return True
-
-    def has_module_perms(self, app_label):
-        return True
-
 
 class BuildingSection(models.Model):
     class Meta:
@@ -175,6 +169,7 @@ class Ticket(models.Model):
     status = models.IntegerField(verbose_name=_('Aktueller Status'), choices=StatusOptions.choices)
     created_at = models.DateTimeField(verbose_name=_('Erstellt am'), auto_now=True)
     created_by = models.ForeignKey(MyUser, verbose_name=_('Erstellt von'), on_delete=models.CASCADE)
+    last_change_at = models.DateTimeField(verbose_name=_('Letzte Änderung am'), auto_now=True)
 
     def __str__(self):
         return self.title

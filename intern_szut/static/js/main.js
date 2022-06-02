@@ -81,7 +81,7 @@ loadAjaxContent = function(page, push_state=true) {
                 window.history.pushState(null, null, page);
             }
             setHighlight(page.split('/')[1]);
-            $('.main-content-wrapper').animate({scrollTop: 0}, 200);
+            $('.main-content-wrapper').animate({scrollTop: 0}, 0);
             },
         error: function() {
             $('#custom-css').remove();
