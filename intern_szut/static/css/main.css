@@ -556,6 +556,7 @@ a {
   flex-wrap: wrap;
   gap: 1rem;
   max-width: 1600px;
+  margin-top: 1rem;
 }
 
 .ticket-boxes-area:not(:last-of-type) {

@@ -1,7 +1,12 @@
 {% load static %}
 <h1>Ticket-System</h1>
 {% if user.is_authenticated %}
-    <h2>Meine Tickets</h2>
+    {% if not perms.inventory_management.add_ticket %}
+        <h2 style="margin-bottom: 0.25rem;">Meine Tickets</h2>
+        <h3>Du hast nicht die Berechtigung neue Tickets zu erstellen.</h3>
+    {% else %}
+        <h2>Meine Tickets</h2>
+    {% endif %}
     <div class="ticket-boxes-area">
         {% if perms.inventory_management.add_ticket %}
             <div class="ticket-box create-new-ticket">
@@ -87,7 +92,7 @@
     </div>
 {% else %}
     <h2 style="margin-bottom: 0.25rem;">Geschlossene Tickets</h2>
-    <div class="ticket-boxes-area">
+    <div class="ticket-boxes-area" style="margin-top: 0;">
         <h3>Keine geschlossenen Tickets vorhanden.</h3>
     </div>
 {% endif %}
