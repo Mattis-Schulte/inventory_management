@@ -1,57 +1,97 @@
 {% load static %}
+<h1>Ticket-System</h1>
 {% if user.is_authenticated %}
-    <h1>Meine Tickets</h1>
+    <h2>Meine Tickets</h2>
     <div class="ticket-boxes-area">
-        <div class="ticket-box create-new-ticket">
-            <i class="bi bi-plus-lg"></i>
-            <h3>Neues Ticket erstellen</h3>
-        </div>
+        {% if perms.inventory_management.add_ticket %}
+            <div class="ticket-box create-new-ticket">
+                <div class="plus-icon">
+                    <i class="bi bi-plus-lg"></i>
+                </div>
+                <h3>Neues Ticket erstellen</h3>
+            </div>
+        {% endif %}
         {% for my_ticket in tickets_data %}
             {% if my_ticket.created_by__id == user.id %}
                 <div class="ticket-box created-ticket" onclick="loadAjaxContent('{% url 'ticket-management' %}ticket-{{ my_ticket.id }}/')">
-                    <h2>{{ my_ticket.title }}</h2>
-                    {% if my_ticket.description %}<p>{{ my_ticket.description }}</p>{% endif %}
-                    <p>{{ my_ticket.status_label }}</p>
-                    <img src="{% if my_ticket.created_by__profile_image_url %}{{ my_ticket.created_by__profile_image_url }}{% endif %}" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
-                    <p>{{ my_ticket.created_by__first_name }} {{ my_ticket.created_by__last_name }}</p>
-                    {% if user.use_12_hour_time_format %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"h:i a" }}</p>{% else %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"H:i" }}</p>{% endif %}
-                    <a href="{{ my_ticket.url }}">Ticket anzeigen</a>
+                    <div class="ticket-box-header">
+                        <h3>{{ my_ticket.status_label }}</h3>
+                        <h2>{{ my_ticket.title }}</h2>
+                        {% if my_ticket.description %}<p>{{ my_ticket.description }}</p>{% endif %}
+                    </div>
+                    <div class="ticket-box-footer">
+                        <img class="ticket-box-footer-element" src="{% if my_ticket.created_by__profile_image_url %}{{ my_ticket.created_by__profile_image_url }}{% endif %}" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
+                        <div class="ticket-box-footer-element creation-details">
+                            <p>{{ my_ticket.created_by__first_name }} {{ my_ticket.created_by__last_name }}</p>
+                            {% if user.use_12_hour_time_format %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"h:i a" }}</p>{% else %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"H:i" }}</p>{% endif %}
+                        </div>
+                        <div class="ticket-box-footer-element view-more-button">Details</div>
+                    </div>
                 </div>
             {% endif %}
         {% endfor %}
     </div>
 {% endif %}
-<h1>Offene Tickets</h1>
-<div class="ticket-boxes-area">
-    <div class="ticket-box create-new-ticket">
+{% if open_tickets_len %}
+    <h2>Offene Tickets</h2>
+    <div class="ticket-boxes-area">
         {% for my_ticket in tickets_data %}
-            {% if my_ticket.status == 2 %}
+            {% if my_ticket.status == 1 %}
                 <div class="ticket-box created-ticket" onclick="loadAjaxContent('{% url 'ticket-management' %}ticket-{{ my_ticket.id }}/')">
-                    <h2>{{ my_ticket.title }}</h2>
-                    {% if my_ticket.description %}<p>{{ my_ticket.description }}</p>{% endif %}
-                    <p>{{ my_ticket.status_label }}</p>
-                    <img src="{% if my_ticket.created_by__profile_image_url %}{{ my_ticket.created_by__profile_image_url }}{% endif %}" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
-                    <p>{{ my_ticket.created_by__first_name }} {{ my_ticket.created_by__last_name }}</p>
-                    {% if user.use_12_hour_time_format %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"h:i a" }}</p>{% else %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"H:i" }}</p>{% endif %}
-                    <a href="{{ my_ticket.url }}">Ticket anzeigen</a>
+                    <div class="ticket-box-header">
+                        <h3>{{ my_ticket.status_label }}</h3>
+                        <h2>{{ my_ticket.title }}</h2>
+                        {% if my_ticket.description %}<p>{{ my_ticket.description }}</p>{% endif %}
+                    </div>
+                    <div class="ticket-box-footer">
+                        <img class="ticket-box-footer-element" src="{% if my_ticket.created_by__profile_image_url %}{{ my_ticket.created_by__profile_image_url }}{% endif %}" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
+                        <div class="ticket-box-footer-element creation-details">
+                            <p>{{ my_ticket.created_by__first_name }} {{ my_ticket.created_by__last_name }}</p>
+                            {% if user.use_12_hour_time_format %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"h:i a" }}</p>{% else %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"H:i" }}</p>{% endif %}
+                        </div>
+                        <div class="ticket-box-footer-element view-more-button">Details</div>
+                    </div>
                 </div>
             {% endif %}
         {% endfor %}
+</div>
+{% else %}
+    <h2 style="margin-bottom: 0.25rem;">Offene Tickets</h2>
+    <div class="ticket-boxes-area">
+        <h3>Keine offenen Tickets vorhanden.</h3>
     </div>
-<h1>Alle Tickets</h1>
-    <div class="ticket-box create-new-ticket">
-        {% for my_ticket in tickets_data %}
-            <div class="ticket-box created-ticket" onclick="loadAjaxContent('{% url 'ticket-management' %}ticket-{{ my_ticket.id }}/')">
-                <h2>{{ my_ticket.title }}</h2>
-                {% if my_ticket.description %}<p>{{ my_ticket.description }}</p>{% endif %}
-                <p>{{ my_ticket.status_label }}</p>
-                <img src="{% if my_ticket.created_by__profile_image_url %}{{ my_ticket.created_by__profile_image_url }}{% endif %}" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
-                <p>{{ my_ticket.created_by__first_name }} {{ my_ticket.created_by__last_name }}</p>
-                {% if user.use_12_hour_time_format %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"h:i a" }}</p>{% else %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"H:i" }}</p>{% endif %}
-                <a href="{{ my_ticket.url }}">Ticket anzeigen</a>
-            </div>
+{% endif %}
+{% if closed_tickets_len %}
+    <h2>Geschlossene Tickets</h2>
+    <div class="ticket-boxes-area">
+         {% for my_ticket in tickets_data %}
+            {% if my_ticket.status == 0 %}
+                <div class="ticket-box created-ticket" onclick="loadAjaxContent('{% url 'ticket-management' %}ticket-{{ my_ticket.id }}/')">
+                    <div class="ticket-box-header">
+                        <h3>{{ my_ticket.status_label }}</h3>
+                        <h2>{{ my_ticket.title }}</h2>
+                        {% if my_ticket.description %}<p>{{ my_ticket.description }}</p>{% endif %}
+                    </div>
+                    <div class="ticket-box-footer">
+                        <img class="ticket-box-footer-element" src="{% if my_ticket.created_by__profile_image_url %}{{ my_ticket.created_by__profile_image_url }}{% endif %}" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
+                        <div class="ticket-box-footer-element creation-details">
+                            <p>{{ my_ticket.created_by__first_name }} {{ my_ticket.created_by__last_name }}</p>
+                            {% if user.use_12_hour_time_format %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"h:i a" }}</p>{% else %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"H:i" }}</p>{% endif %}
+                        </div>
+                        <div class="ticket-box-footer-element view-more-button">Details</div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if forloop.last %}{{ forloop.counter }}{% endif %}
         {% endfor %}
     </div>
+{% else %}
+    <h2 style="margin-bottom: 0.25rem;">Geschlossene Tickets</h2>
+    <div class="ticket-boxes-area">
+        <h3>Keine geschlossenen Tickets vorhanden.</h3>
+    </div>
+{% endif %}
 <script>
     document.title ='Ticket-System – SZUT Inventur Management';
+    $('head').append('<link rel="stylesheet" id="custom-css" href="{% static 'css/ticket-management.css' %}" />');
 </script>

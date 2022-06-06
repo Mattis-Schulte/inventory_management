@@ -72,7 +72,7 @@
             <div class="table-row-element table-element-1">Geräte&shy;kategorie</div>
             <div class="table-row-element table-element-2">Name</div>
             <div class="table-row-element table-element-3">Status</div>
-            <div class="table-row-element table-view-more-button" style="visibility: hidden;">Details</div>
+            <div class="table-row-element view-more-button" style="visibility: hidden;">Details</div>
         </div>
     </div>
     <div class="table-body">
@@ -82,13 +82,13 @@
                 <div class="table-row-element table-element-1">{% if device.device_category__icon %}<i class="{{ device.device_category__icon }}"></i>{% endif %}{{ device.device_category__name }}</div>
                 <div class="table-row-element table-element-2">{{ device.name }}</div>
                 <div class="table-row-element table-element-3">{{ device.status_label }}</div>
-                <div class="table-row-element table-view-more-button">Details</div>
+                <div class="table-row-element view-more-button">Details</div>
             </div>
             {% endfor %}
         {% else %}
             <div class="table-row table-row-no-matches">
                 <div class="table-row-element table-element-1">Keine Geräte vorhanden</div>
-                <div class="table-row-element table-view-more-button" style="visibility: hidden;">Details</div>
+                <div class="table-row-element view-more-button" style="visibility: hidden;">Details</div>
             </div>
         {% endif %}
     </div>

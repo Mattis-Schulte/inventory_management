@@ -15,7 +15,7 @@
 }
 
 @media screen and (max-width: 1300px) {
-  .table-row-element:nth-child(n+4) {
+  .table-row-element:nth-child(4) {
     display: none;
   }
 }
@@ -38,7 +38,7 @@
 }
 
 @media screen and (max-width: 670px) {
-  .table-view-more-button {
+  .view-more-button {
     display: none;
   }
 }

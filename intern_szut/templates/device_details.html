@@ -17,31 +17,31 @@
         </div>
     </div>
     <div class="table-body">
-        <div class="table-row" tabindex="0">
+        <div class="table-row">
             <div class="table-row-element table-element-1">Geräte&shy;kategorie</div>
             <div class="table-row-element table-element-2">{% if device_data.device_category__icon %}<i class="{{ device_data.device_category__icon }}"></i>{% endif %}{{ device_data.device_category__name }}</div>
         </div>
-        <div class="table-row" tabindex="0">
+        <div class="table-row">
             <div class="table-row-element table-element-1">Aktueller Status</div>
             <div class="table-row-element table-element-2">{{ device_data.status_label }}</div>
         </div>
-        <div class="table-row" tabindex="0">
+        <div class="table-row">
             <div class="table-row-element table-element-1">Hersteller</div>
             <div class="table-row-element table-element-2">{% if device_data.device_manufacturer__name %}{{ device_data.device_manufacturer__name }}{% else %}Unbekannt{% endif %}</div>
         </div>
-        <div class="table-row" tabindex="0">
+        <div class="table-row">
             <div class="table-row-element table-element-1">Anschaffungs&shy;datum</div>
             <div class="table-row-element table-element-2">{% if device_data.purchase_data %}{{ device_data.purchase_data }}{% else %}Unbekannt{% endif %}</div>
         </div>
-        <div class="table-row" tabindex="0">
+        <div class="table-row">
             <div class="table-row-element table-element-1">Garantie&shy;zeit vom Anschaffungs&shy;datum</div>
             <div class="table-row-element table-element-2">{% if device_data.warranty_period_years or device_data.warranty_period_months %}{% if device_data.warranty_period_years %}{{ device_data.warranty_period_years }} Jahre{% endif %}{% if device_data.warranty_period_months %}{% if device_data.warranty_period_years %}, {{ device_data.warranty_period_months }} Monate{% else %}{{ device_data.warranty_period_months }} Monate{% endif %}{% endif %}{% else %}Unbekannt{% endif %}</div>
         </div>
-        <div class="table-row" tabindex="0">
+        <div class="table-row">
             <div class="table-row-element table-element-1">Serien&shy;nummer</div>
             <div class="table-row-element table-element-2">{% if device_data.serial_number %}{{ device_data.serial_number }}{% else %}Unbekannt{% endif %}</div>
         </div>
-        <div class="table-row" tabindex="0">
+        <div class="table-row">
             <div class="table-row-element table-element-1">Preis</div>
             <div class="table-row-element table-element-2">{% if device_data.price %}{{ device_data.price }} €{% else %}Unbekannt{% endif %}</div>
         </div>

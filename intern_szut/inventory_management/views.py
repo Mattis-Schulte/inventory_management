@@ -112,13 +112,16 @@ def device_details(request, device_id):
 def ticket_management(request):
     tickets_data = Ticket.objects.order_by('last_change_at').all().values('id', 'title', 'description', 'status', 'created_by__id', 'created_by__first_name', 'created_by__last_name', 'created_by__profile_image_url', 'last_change_at')
     tickets_data = get_choices.GetChoices.make_labels_readable(tickets_data, Ticket.StatusOptions, 'status')
-    tickets_data = truncate.Truncate.truncate_data(tickets_data, 'description', 80)
+    tickets_data = truncate.Truncate.truncate_data(tickets_data, 'description', 100)
     tickets_statuses_data = get_choices.GetChoices.get_enum_choices(Ticket.StatusOptions)
 
+    open_tickets_len = tickets_data.filter(status=Ticket.StatusOptions.OPEN).count()
+    closed_tickets_len = tickets_data.filter(status=Ticket.StatusOptions.CLOSED).count()
+
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-        return render(request, 'ticket-management.html', {'tickets_data': list(tickets_data), 'tickets_statuses_data': list(tickets_statuses_data)})
+        return render(request, 'ticket-management.html', {'tickets_data': list(tickets_data), 'open_tickets_len': open_tickets_len, 'closed_tickets_len': closed_tickets_len, 'tickets_statuses_data': list(tickets_statuses_data)})
     else:
-        return render(request, 'index.html', {'current_page_category': 'ticket-management', 'current_page_file': 'ticket-management.html', 'tickets_data': list(tickets_data), 'tickets_statuses_data': list(tickets_statuses_data)})
+        return render(request, 'index.html', {'current_page_category': 'ticket-management', 'current_page_file': 'ticket-management.html', 'tickets_data': list(tickets_data), 'open_tickets_len': open_tickets_len, 'closed_tickets_len': closed_tickets_len, 'tickets_statuses_data': list(tickets_statuses_data)})
 
 
 def account(request):

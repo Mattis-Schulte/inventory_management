@@ -77,7 +77,7 @@
             <div class="table-row-element table-element-2">Name</div>
             <div class="table-row-element table-element-3">Raum</div>
             <div class="table-row-element table-element-4">Status</div>
-            <div class="table-row-element table-view-more-button" style="visibility: hidden;">Details</div>
+            <div class="table-row-element view-more-button" style="visibility: hidden;">Details</div>
         </div>
     </div>
     <div class="table-body">
@@ -88,13 +88,13 @@
                 <div class="table-row-element table-element-2">{{ device.name }}</div>
                 <div class="table-row-element table-element-3">{{ device.room__name }}</div>
                 <div class="table-row-element table-element-4">{{ device.status_label }}</div>
-                <div class="table-row-element table-view-more-button">Details</div>
+                <div class="table-row-element view-more-button">Details</div>
             </div>
             {% endfor %}
         {% else %}
             <div class="table-row table-row-no-matches">
                 <div class="table-row-element table-element-1">Keine Geräte vorhanden</div>
-                <div class="table-row-element table-view-more-button" style="visibility: hidden;">Details</div>
+                <div class="table-row-element view-more-button" style="visibility: hidden;">Details</div>
             </div>
         {% endif %}
     </div>

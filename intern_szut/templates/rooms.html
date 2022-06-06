@@ -39,7 +39,7 @@
             <div class="table-row-element table-element-1">Name</div>
             <div class="table-row-element table-element-2">Etage</div>
             <div class="table-row-element table-element-3">Bau&shy;abschnitt</div>
-            <div class="table-row-element table-view-more-button" style="visibility: hidden;">Details</div>
+            <div class="table-row-element view-more-button" style="visibility: hidden;">Details</div>
         </div>
     </div>
     <div class="table-body">
@@ -49,13 +49,13 @@
                 <div class="table-row-element table-element-1">{{ room.name }}</div>
                 <div class="table-row-element table-element-2">{{ room.floor__name }}</div>
                 <div class="table-row-element table-element-3">{{ room.building_section__name }}</div>
-                <div class="table-row-element table-view-more-button">Details</div>
+                <div class="table-row-element view-more-button">Details</div>
             </div>
             {% endfor %}
         {% else %}
             <div class="table-row table-row-no-matches">
                 <div class="table-row-element table-element-1">Keine Räume vorhanden</div>
-                <div class="table-row-element table-view-more-button" style="visibility: hidden;">Details</div>
+                <div class="table-row-element view-more-button" style="visibility: hidden;">Details</div>
             </div>
         {% endif %}
     </div>
