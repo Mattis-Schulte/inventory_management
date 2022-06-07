@@ -108,7 +108,7 @@ class FilterDevices:
                                 date_to_filter = date.today() - timedelta(days=cls.date_of_purchase_steps[int(request_data)]['max_value']) * 30.437
                                 devices_data = devices_data.filter(**{_filter['result'] + '__gte': date_to_filter})
                             else:
-                                pass
+                                devices_data = devices_data.filter(**{_filter['result'] + '__isnull': False})
                         else:
                             return None, number_of_filters_applied
                     elif _filter['name'] == 'status-filter' and int(request_data) in [status['id'] for status in devices_statuses_data]:

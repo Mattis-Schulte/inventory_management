@@ -1,5 +1,5 @@
 .page-content > h3:not(.subheader) {
-  margin: 0 0 1.5rem 1.5rem;
+  margin: 0 1.5rem 1.5rem 1.5rem;
   -webkit-text-size-adjust: 100%;
   -moz-text-size-adjust: none;
   -ms-text-size-adjust: 100%;
