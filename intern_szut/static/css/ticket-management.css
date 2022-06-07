@@ -1,0 +1,24 @@
+.no-tickets {
+  margin-top: 0;
+}
+
+.page-content > h3 {
+  margin-bottom: 1.5rem;
+}
+
+.general-info-area {
+  margin-bottom: 1.5rem;
+}
+
+/* Media Queries */
+@media screen and (max-width: 690px) {
+  .general-info-area div:nth-child(n+3) {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .general-info-area div:not(:nth-child(2)) {
+    display: none;
+  }
+}

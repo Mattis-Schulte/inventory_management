@@ -50,7 +50,7 @@
     </div>
 </div>
 {% if tickets_data %}
-    <h2>Deine Tickets</h2>
+    <h2 class="h2-top-margin">Deine Tickets</h2>
     <div class="ticket-boxes-area">
         {% for my_ticket in tickets_data %}
             <div class="ticket-box created-ticket" tabindex="0" onclick="loadAjaxContent('{% url 'ticket-management' %}ticket-{{ my_ticket.id }}/')">

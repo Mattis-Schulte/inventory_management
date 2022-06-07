@@ -1,9 +1,23 @@
 {% load static %}
 <h1>Ticket-System</h1>
+<div class="general-info-area">
+    <div class="general-info-box">
+        <h3>Anzahl an Tickets</h3>
+        <h2 class="number-of-devices">{{ unique_tickets_count }}</h2>
+    </div>
+    <div class="general-info-box">
+        <h3>Anzahl an offenen Tickets</h3>
+        <h2 class="number-of-device-categories">{{ unique_open_tickets_count }}</h2>
+    </div>
+    <div class="general-info-box">
+        <h3>Anzahl an geschlossenen Tickets</h3>
+        <h2 class="number-of-device-categories">{{ unique_closed_tickets_count }}</h2>
+    </div>
+</div>
 {% if user.is_authenticated %}
     {% if not perms.inventory_management.add_ticket %}
-        <h2 style="margin-bottom: 0.25rem;">Meine Tickets</h2>
-        <h3 style="margin-bottom: 1.5rem;">Du hast nicht die Berechtigung neue Tickets zu erstellen.</h3>
+        <h2>Meine Tickets</h2>
+        <h3>Du hast nicht die Berechtigung neue Tickets zu erstellen.</h3>
     {% else %}
         <h2>Meine Tickets</h2>
     {% endif %}
@@ -30,10 +44,10 @@
             {% endfor %}
         </div>
     {% elif perms.inventory_management.add_ticket and not my_tickets_len %}
-        <h3 style="margin-bottom: 1.5rem;">Du hast noch keine Tickets erstellt.</h3>
+        <h3>Du hast noch keine Tickets erstellt.</h3>
     {% endif %}
 {% endif %}
-{% if open_tickets_len %}
+{% if unique_open_tickets_count %}
     <h2>Offene Tickets</h2>
     <div class="ticket-boxes-area">
         {% for my_ticket in tickets_data %}
@@ -57,12 +71,12 @@
         {% endfor %}
 </div>
 {% else %}
-    <h2 style="margin-bottom: 0.25rem;">Offene Tickets</h2>
-    <div class="ticket-boxes-area" style="margin-top: 0;">
+    <h2>Offene Tickets</h2>
+    <div class="ticket-boxes-area no-tickets">
         <h3>Keine offenen Tickets vorhanden.</h3>
     </div>
 {% endif %}
-{% if closed_tickets_len %}
+{% if unique_closed_tickets_count %}
     <h2>Geschlossene Tickets</h2>
     <div class="ticket-boxes-area">
          {% for my_ticket in tickets_data %}
@@ -87,11 +101,12 @@
         {% endfor %}
     </div>
 {% else %}
-    <h2 style="margin-bottom: 0.25rem;">Geschlossene Tickets</h2>
-    <div class="ticket-boxes-area" style="margin-top: 0;">
+    <h2>Geschlossene Tickets</h2>
+    <div class="ticket-boxes-area no-tickets">
         <h3>Keine geschlossenen Tickets vorhanden.</h3>
     </div>
 {% endif %}
 <script>
     document.title ='Ticket-System – SZUT Inventur Management';
+    $('head').append('<link rel="stylesheet" id="custom-css" href="{% static 'css/ticket-management.css' %}" />');
 </script>

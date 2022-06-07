@@ -72,12 +72,13 @@
     </div>
 {% endif %}
 <script>
-    document.title ='Suche nach {{ search_request_short }} – SZUT Inventur Management';
+    document.title ='Suche nach "{{ search_request_short }}" – SZUT Inventur Management';
     $('head').append('<link rel="stylesheet" id="custom-css" href="{% static 'css/search.css' %}" />');
 
     $(document).ready(function(){
-        if ($('#search-form').find('input').val() === '') {
-            $(this).find('input').val('{{ search_request }}');
+        let form = $('#search-form');
+        if (form.find('input').val() === '') {
+            form.find('input').val('{{ search_request }}');
         }
     });
 </script>

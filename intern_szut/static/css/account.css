@@ -1,3 +1,7 @@
 .table {
-  margin: 1rem 0 2rem 0;
+  margin-top: 1rem;
+}
+
+.h2-top-margin {
+  margin-top: 2rem;
 }

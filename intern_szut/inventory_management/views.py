@@ -16,7 +16,7 @@ def search(request):
         tickets_data = search_data.SearchData.search_tickets(search_request, Ticket.objects.order_by('-last_change_at').all().values('id', 'title', 'description', 'status', 'created_by__id', 'created_by__first_name', 'created_by__last_name', 'created_by__profile_image_url', 'last_change_at'))
 
         tickets_data = get_choices.GetChoices.make_labels_readable(tickets_data, Ticket.StatusOptions, 'status')
-        tickets_data = truncate.Truncate.truncate_data(tickets_data, 'description', 120)
+        tickets_data = truncate.Truncate.truncate_data(tickets_data, 'description', 115)
 
         devices_data = search_data.SearchData.search_devices(search_request, Device.objects.order_by('device_category__name', 'name').all().values('device_category__name', 'device_category__icon', 'room__name', 'device_manufacturer__name', 'serial_number', 'description', 'name', 'status', 'id'))
         devices_data = get_choices.GetChoices.make_labels_readable(devices_data, Device.StatusOptions, 'status')
@@ -34,14 +34,18 @@ def search(request):
 def overview(request):
     tickets_data = Ticket.objects.order_by('-last_change_at').all().values('id', 'title', 'description', 'status', 'created_by__id', 'created_by__first_name', 'created_by__last_name', 'created_by__profile_image_url', 'last_change_at')[:8]
     tickets_data = get_choices.GetChoices.make_labels_readable(tickets_data, Ticket.StatusOptions, 'status')
-    tickets_data = truncate.Truncate.truncate_data(tickets_data, 'description', 120)
+    tickets_data = truncate.Truncate.truncate_data(tickets_data, 'description', 115)
 
-    devices_data = Device.objects.filter(status=0).order_by('device_category__name', 'name').all().values('device_category__name', 'device_category__icon', 'room__name', 'name', 'id')
+    devices_data = Device.objects.filter(status=Device.StatusOptions.NOT_FUNCTIONAL).order_by('device_category__name', 'name').all().values('device_category__name', 'device_category__icon', 'room__name', 'name', 'id')
+
+    unique_rooms_count = Room.objects.all().count()
+    unique_devices_count = Device.objects.all().count()
+    unique_open_tickets_count = Ticket.objects.filter(status=Ticket.StatusOptions.OPEN).all().count()
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-        return render(request, 'overview.html', {'tickets_data': list(tickets_data), 'devices_data': list(devices_data)})
+        return render(request, 'overview.html', {'tickets_data': list(tickets_data), 'devices_data': list(devices_data), 'unique_rooms_count': unique_rooms_count, 'unique_devices_count': unique_devices_count, 'unique_open_tickets_count': unique_open_tickets_count})
     else:
-        return render(request, 'index.html', {'current_page_category': 'overview', 'current_page_file': 'overview.html', 'tickets_data': list(tickets_data), 'devices_data': list(devices_data)})
+        return render(request, 'index.html', {'current_page_category': 'overview', 'current_page_file': 'overview.html', 'tickets_data': list(tickets_data), 'devices_data': list(devices_data), 'unique_rooms_count': unique_rooms_count, 'unique_devices_count': unique_devices_count, 'unique_open_tickets_count': unique_open_tickets_count})
 
 
 def rooms(request):
@@ -81,13 +85,13 @@ def room_details(request, room_name):
 
         devices_data = get_choices.GetChoices.make_labels_readable(devices_data, Device.StatusOptions, 'status')
         unique_devices_count = devices_data.count()
-        unique_device_categories = devices_data.values('device_category__id').distinct().count()
-        unique_device_manufacturers = devices_data.values('device_manufacturer__id').distinct().count()
+        unique_device_categories_count = devices_data.values('device_category__id').distinct().count()
+        unique_device_manufacturers_count = devices_data.values('device_manufacturer__id').distinct().count()
 
         if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-            return render(request, 'room-details.html', {'room_data': room_data, 'device_categories_data': list(device_categories_data), 'devices_statuses_data': list(devices_statuses_data), 'devices_data': list(devices_data), 'device_manufacturers_data': list(device_manufacturers_data), 'price_steps': filter_devices.FilterDevices.price_steps, 'remaining_warranty_steps': filter_devices.FilterDevices.remaining_warranty_steps, 'date_of_purchase_steps': filter_devices.FilterDevices.date_of_purchase_steps, 'unique_devices_count': unique_devices_count, 'unique_device_categories': unique_device_categories, 'unique_device_manufacturers': unique_device_manufacturers, 'number_of_filters_applied': number_of_filters_applied})
+            return render(request, 'room-details.html', {'room_data': room_data, 'device_categories_data': list(device_categories_data), 'devices_statuses_data': list(devices_statuses_data), 'devices_data': list(devices_data), 'device_manufacturers_data': list(device_manufacturers_data), 'price_steps': filter_devices.FilterDevices.price_steps, 'remaining_warranty_steps': filter_devices.FilterDevices.remaining_warranty_steps, 'date_of_purchase_steps': filter_devices.FilterDevices.date_of_purchase_steps, 'unique_devices_count': unique_devices_count, 'unique_device_categories_count': unique_device_categories_count, 'unique_device_manufacturers_count': unique_device_manufacturers_count, 'number_of_filters_applied': number_of_filters_applied})
         else:
-            return render(request, 'index.html', {'current_page_category': 'rooms', 'current_page_file': 'room-details.html', 'room_data': room_data, 'device_categories_data': list(device_categories_data), 'devices_statuses_data': list(devices_statuses_data), 'devices_data': list(devices_data), 'device_manufacturers_data': list(device_manufacturers_data), 'price_steps': filter_devices.FilterDevices.price_steps, 'remaining_warranty_steps': filter_devices.FilterDevices.remaining_warranty_steps, 'date_of_purchase_steps': filter_devices.FilterDevices.date_of_purchase_steps, 'unique_devices_count': unique_devices_count, 'unique_device_categories': unique_device_categories, 'unique_device_manufacturers': unique_device_manufacturers, 'number_of_filters_applied': number_of_filters_applied})
+            return render(request, 'index.html', {'current_page_category': 'rooms', 'current_page_file': 'room-details.html', 'room_data': room_data, 'device_categories_data': list(device_categories_data), 'devices_statuses_data': list(devices_statuses_data), 'devices_data': list(devices_data), 'device_manufacturers_data': list(device_manufacturers_data), 'price_steps': filter_devices.FilterDevices.price_steps, 'remaining_warranty_steps': filter_devices.FilterDevices.remaining_warranty_steps, 'date_of_purchase_steps': filter_devices.FilterDevices.date_of_purchase_steps, 'unique_devices_count': unique_devices_count, 'unique_device_categories_count': unique_device_categories_count, 'unique_device_manufacturers_count': unique_device_manufacturers_count, 'number_of_filters_applied': number_of_filters_applied})
 
     else:
         return redirect('rooms')
@@ -108,13 +112,13 @@ def devices(request):
     devices_data = get_choices.GetChoices.make_labels_readable(devices_data, Device.StatusOptions, 'status')
     unique_devices_count = devices_data.count()
     unique_rooms_count = devices_data.values('room__id').distinct().count()
-    unique_device_categories = devices_data.values('device_category__id').distinct().count()
-    unique_device_manufacturers = devices_data.values('device_manufacturer__id').distinct().count()
+    unique_device_categories_count = devices_data.values('device_category__id').distinct().count()
+    unique_device_manufacturers_count = devices_data.values('device_manufacturer__id').distinct().count()
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-        return render(request, 'devices.html', {'device_categories_data': list(device_categories_data), 'devices_statuses_data': list(devices_statuses_data), 'devices_data': list(devices_data), 'device_manufacturers_data': list(device_manufacturers_data), 'price_steps': filter_devices.FilterDevices.price_steps, 'remaining_warranty_steps': filter_devices.FilterDevices.remaining_warranty_steps, 'date_of_purchase_steps': filter_devices.FilterDevices.date_of_purchase_steps, 'unique_devices_count': unique_devices_count, 'unique_rooms_count': unique_rooms_count, 'unique_device_categories': unique_device_categories, 'unique_device_manufacturers': unique_device_manufacturers, 'number_of_filters_applied': number_of_filters_applied})
+        return render(request, 'devices.html', {'device_categories_data': list(device_categories_data), 'devices_statuses_data': list(devices_statuses_data), 'devices_data': list(devices_data), 'device_manufacturers_data': list(device_manufacturers_data), 'price_steps': filter_devices.FilterDevices.price_steps, 'remaining_warranty_steps': filter_devices.FilterDevices.remaining_warranty_steps, 'date_of_purchase_steps': filter_devices.FilterDevices.date_of_purchase_steps, 'unique_devices_count': unique_devices_count, 'unique_rooms_count': unique_rooms_count, 'unique_device_categories_count': unique_device_categories_count, 'unique_device_manufacturers_count': unique_device_manufacturers_count, 'number_of_filters_applied': number_of_filters_applied})
     else:
-        return render(request, 'index.html', {'current_page_category': 'devices', 'current_page_file': 'devices.html', 'device_categories_data': list(device_categories_data), 'devices_statuses_data': list(devices_statuses_data), 'devices_data': list(devices_data), 'device_manufacturers_data': list(device_manufacturers_data), 'price_steps': filter_devices.FilterDevices.price_steps, 'remaining_warranty_steps': filter_devices.FilterDevices.remaining_warranty_steps, 'date_of_purchase_steps': filter_devices.FilterDevices.date_of_purchase_steps, 'unique_devices_count': unique_devices_count, 'unique_rooms_count': unique_rooms_count, 'unique_device_categories': unique_device_categories, 'unique_device_manufacturers': unique_device_manufacturers, 'number_of_filters_applied': number_of_filters_applied})
+        return render(request, 'index.html', {'current_page_category': 'devices', 'current_page_file': 'devices.html', 'device_categories_data': list(device_categories_data), 'devices_statuses_data': list(devices_statuses_data), 'devices_data': list(devices_data), 'device_manufacturers_data': list(device_manufacturers_data), 'price_steps': filter_devices.FilterDevices.price_steps, 'remaining_warranty_steps': filter_devices.FilterDevices.remaining_warranty_steps, 'date_of_purchase_steps': filter_devices.FilterDevices.date_of_purchase_steps, 'unique_devices_count': unique_devices_count, 'unique_rooms_count': unique_rooms_count, 'unique_device_categories_count': unique_device_categories_count, 'unique_device_manufacturers_count': unique_device_manufacturers_count, 'number_of_filters_applied': number_of_filters_applied})
 
 
 def device_details(request, device_id):
@@ -125,7 +129,7 @@ def device_details(request, device_id):
 
             tickets_data = Ticket.objects.filter(device__id=device_id).order_by('-last_change_at').all().values('id', 'title', 'description', 'status', 'created_by__id', 'created_by__first_name', 'created_by__last_name', 'created_by__profile_image_url', 'last_change_at')[:8]
             tickets_data = get_choices.GetChoices.make_labels_readable(tickets_data, Ticket.StatusOptions, 'status')
-            tickets_data = truncate.Truncate.truncate_data(tickets_data, 'description', 120)
+            tickets_data = truncate.Truncate.truncate_data(tickets_data, 'description', 115)
 
             if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
                 return render(request, 'device-details.html', {'device_data': device_data, 'tickets_data': tickets_data})
@@ -138,10 +142,13 @@ def device_details(request, device_id):
 def ticket_management(request):
     tickets_data = Ticket.objects.order_by('-last_change_at').all().values('id', 'title', 'description', 'status', 'created_by__id', 'created_by__first_name', 'created_by__last_name', 'created_by__profile_image_url', 'last_change_at')
     tickets_data = get_choices.GetChoices.make_labels_readable(tickets_data, Ticket.StatusOptions, 'status')
-    tickets_data = truncate.Truncate.truncate_data(tickets_data, 'description', 120)
+    tickets_data = truncate.Truncate.truncate_data(tickets_data, 'description', 115)
 
-    open_tickets_len = tickets_data.filter(status=Ticket.StatusOptions.OPEN).count()
-    closed_tickets_len = tickets_data.filter(status=Ticket.StatusOptions.CLOSED).count()
+    unique_tickets_count = tickets_data.count()
+    unique_open_tickets_count = tickets_data.filter(status=Ticket.StatusOptions.OPEN).count()
+    unique_closed_tickets_count = tickets_data.filter(status=Ticket.StatusOptions.CLOSED).count()
+
+
 
     if request.user.is_authenticated:
         my_tickets_len = tickets_data.filter(created_by__id=request.user.id).count()
@@ -149,9 +156,9 @@ def ticket_management(request):
         my_tickets_len = None
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-        return render(request, 'ticket-management.html', {'tickets_data': list(tickets_data), 'open_tickets_len': open_tickets_len, 'closed_tickets_len': closed_tickets_len, 'my_tickets_len': my_tickets_len})
+        return render(request, 'ticket-management.html', {'tickets_data': list(tickets_data), 'my_tickets_len': my_tickets_len, 'unique_tickets_count': unique_tickets_count, 'unique_open_tickets_count': unique_open_tickets_count, 'unique_closed_tickets_count': unique_closed_tickets_count})
     else:
-        return render(request, 'index.html', {'current_page_category': 'ticket-management', 'current_page_file': 'ticket-management.html', 'tickets_data': list(tickets_data), 'open_tickets_len': open_tickets_len, 'closed_tickets_len': closed_tickets_len, 'my_tickets_len': my_tickets_len})
+        return render(request, 'index.html', {'current_page_category': 'ticket-management', 'current_page_file': 'ticket-management.html', 'tickets_data': list(tickets_data), 'my_tickets_len': my_tickets_len, 'unique_tickets_count': unique_tickets_count, 'unique_open_tickets_count': unique_open_tickets_count, 'unique_closed_tickets_count': unique_closed_tickets_count})
 
 
 def create_new_ticket(request):
@@ -180,7 +187,7 @@ def account(request):
     if request.user.is_authenticated:
         tickets_data = Ticket.objects.filter(created_by__id=request.user.id).order_by('-last_change_at').all().values('id', 'title', 'description', 'status', 'created_by__id', 'created_by__first_name', 'created_by__last_name', 'created_by__profile_image_url', 'last_change_at')
         tickets_data = get_choices.GetChoices.make_labels_readable(tickets_data, Ticket.StatusOptions, 'status')
-        tickets_data = truncate.Truncate.truncate_data(tickets_data, 'description', 120)
+        tickets_data = truncate.Truncate.truncate_data(tickets_data, 'description', 115)
 
         if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
             return render(request, 'account.html', {'tickets_data': tickets_data})

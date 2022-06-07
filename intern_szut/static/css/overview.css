@@ -1,3 +1,7 @@
+.general-info-area {
+  margin-bottom: 1.5rem;
+}
+
 .table-row-element:first-child {
   flex: 1.6 1.6 0;
 }
@@ -6,7 +10,16 @@
   flex: 1 1 0;
 }
 
+/* Media Queries */
 @media screen and (max-width: 670px) {
+  .general-info-area {
+    flex-wrap: wrap;
+  }
+
+  .general-info-area div:nth-child(n+3) {
+    display: none;
+  }
+
   .view-more-button {
     display: none;
   }
@@ -19,6 +32,10 @@
 }
 
 @media screen and (max-width: 480px) {
+  .general-info-area div:not(:nth-child(2)) {
+    display: none;
+  }
+
   .table-row-element:nth-child(2) {
     display: none;
   }
