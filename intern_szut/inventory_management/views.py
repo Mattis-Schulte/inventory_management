@@ -17,10 +17,16 @@ def search(request):
 
 
 def overview(request):
+    tickets_data = Ticket.objects.filter(status=1).order_by('-last_change_at').all().values('id', 'title', 'description', 'status', 'created_by__id', 'created_by__first_name', 'created_by__last_name', 'created_by__profile_image_url', 'last_change_at')[:8]
+    tickets_data = get_choices.GetChoices.make_labels_readable(tickets_data, Ticket.StatusOptions, 'status')
+    tickets_data = truncate.Truncate.truncate_data(tickets_data, 'description', 100)
+
+    devices_data = Device.objects.filter(status=0).order_by('device_category__name', 'name').all().values('device_category__name', 'device_category__icon', 'room__name', 'name', 'id')
+
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-        return render(request, 'overview.html')
+        return render(request, 'overview.html', {'tickets_data': list(tickets_data), 'devices_data': list(devices_data)})
     else:
-        return render(request, 'index.html', {'current_page_category': 'overview', 'current_page_file': 'overview.html'})
+        return render(request, 'index.html', {'current_page_category': 'overview', 'current_page_file': 'overview.html', 'tickets_data': list(tickets_data), 'devices_data': list(devices_data)})
 
 
 def rooms(request):
@@ -101,36 +107,42 @@ def device_details(request, device_id):
         device_data = Device.objects.filter(id=device_id).values('device_category__name', 'device_category__icon', 'room__name', 'price', 'device_manufacturer__name', 'purchase_data', 'warranty_period_years', 'warranty_period_months', 'serial_number', 'name', 'description', 'status')
         device_data = get_choices.GetChoices.make_labels_readable(device_data, Device.StatusOptions, 'status')[0]
 
+        tickets_data = Ticket.objects.filter(device__id=device_id).order_by('-last_change_at').all().values('id', 'title', 'description', 'status', 'created_by__id', 'created_by__first_name', 'created_by__last_name', 'created_by__profile_image_url', 'last_change_at')[:8]
+        tickets_data = get_choices.GetChoices.make_labels_readable(tickets_data, Ticket.StatusOptions, 'status')
+        tickets_data = truncate.Truncate.truncate_data(tickets_data, 'description', 100)
+
         if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-            return render(request, 'device_details.html', {'device_data': device_data})
+            return render(request, 'device_details.html', {'device_data': device_data, 'tickets_data': tickets_data})
         else:
-            return render(request, 'index.html', {'current_page_category': 'devices', 'current_page_file': 'device_details.html', 'device_data': device_data})
+            return render(request, 'index.html', {'current_page_category': 'devices', 'current_page_file': 'device_details.html', 'device_data': device_data, 'tickets_data': tickets_data})
     else:
         return redirect('devices')
 
 
 def ticket_management(request):
-    tickets_data = Ticket.objects.order_by('last_change_at').all().values('id', 'title', 'description', 'status', 'created_by__id', 'created_by__first_name', 'created_by__last_name', 'created_by__profile_image_url', 'last_change_at')
+    tickets_data = Ticket.objects.order_by('-last_change_at').all().values('id', 'title', 'description', 'status', 'created_by__id', 'created_by__first_name', 'created_by__last_name', 'created_by__profile_image_url', 'last_change_at')
     tickets_data = get_choices.GetChoices.make_labels_readable(tickets_data, Ticket.StatusOptions, 'status')
     tickets_data = truncate.Truncate.truncate_data(tickets_data, 'description', 100)
-    tickets_statuses_data = get_choices.GetChoices.get_enum_choices(Ticket.StatusOptions)
 
     open_tickets_len = tickets_data.filter(status=Ticket.StatusOptions.OPEN).count()
     closed_tickets_len = tickets_data.filter(status=Ticket.StatusOptions.CLOSED).count()
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-        return render(request, 'ticket-management.html', {'tickets_data': list(tickets_data), 'open_tickets_len': open_tickets_len, 'closed_tickets_len': closed_tickets_len, 'tickets_statuses_data': list(tickets_statuses_data)})
+        return render(request, 'ticket-management.html', {'tickets_data': list(tickets_data), 'open_tickets_len': open_tickets_len, 'closed_tickets_len': closed_tickets_len})
     else:
-        return render(request, 'index.html', {'current_page_category': 'ticket-management', 'current_page_file': 'ticket-management.html', 'tickets_data': list(tickets_data), 'open_tickets_len': open_tickets_len, 'closed_tickets_len': closed_tickets_len, 'tickets_statuses_data': list(tickets_statuses_data)})
+        return render(request, 'index.html', {'current_page_category': 'ticket-management', 'current_page_file': 'ticket-management.html', 'tickets_data': list(tickets_data), 'open_tickets_len': open_tickets_len, 'closed_tickets_len': closed_tickets_len})
 
 
 def account(request):
     if request.user.is_authenticated:
-        print(request.user.has_perm('inventory_management.add_ticket'))
+        tickets_data = Ticket.objects.filter(created_by__id=request.user.id).order_by('-last_change_at').all().values('id', 'title', 'description', 'status', 'created_by__id', 'created_by__first_name', 'created_by__last_name', 'created_by__profile_image_url', 'last_change_at')
+        tickets_data = get_choices.GetChoices.make_labels_readable(tickets_data, Ticket.StatusOptions, 'status')
+        tickets_data = truncate.Truncate.truncate_data(tickets_data, 'description', 100)
+
         if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-            return render(request, 'account.html')
+            return render(request, 'account.html', {'tickets_data': tickets_data})
         else:
-            return render(request, 'index.html', {'current_page_category': 'account', 'current_page_file': 'account.html'})
+            return render(request, 'index.html', {'current_page_category': 'account', 'current_page_file': 'account.html', 'tickets_data': tickets_data})
     else:
         if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
             return HttpResponse(status=401)

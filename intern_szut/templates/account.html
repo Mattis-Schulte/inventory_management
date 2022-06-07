@@ -1,2 +1,81 @@
-<script>document.title ='Account – SZUT Inventur Management';</script>
-<p>Hi {{ user.get_full_name }}!</p>
+{% load static %}
+<h1>Hallo, {{ user.get_full_name }}</h1>
+<h2>Deine Daten</h2>
+<div class="table">
+    <div class="table-body">
+        <div class="table-row">
+            <div class="table-row-element table-element-1">Benutzername</div>
+            <div class="table-row-element table-element-2">{{ user.username }}</div>
+        </div>
+        <div class="table-row">
+            <div class="table-row-element table-element-1">Vorname</div>
+            <div class="table-row-element table-element-2">{{ user.first_name }}</div>
+        </div>
+        <div class="table-row">
+            <div class="table-row-element table-element-1">Nachname</div>
+            <div class="table-row-element table-element-2">{{ user.last_name }}</div>
+        </div>
+        <div class="table-row">
+            <div class="table-row-element table-element-1">E-Mail-Adresse</div>
+            <div class="table-row-element table-element-2">{{ user.email }}</div>
+        </div>
+        <div class="table-row">
+            <div class="table-row-element table-element-1">Itslearning Person-ID</div>
+            <div class="table-row-element table-element-2">{{ user.person_id }}</div>
+        </div>
+        <div class="table-row">
+            <div class="table-row-element table-element-1">Rolle</div>
+            <div class="table-row-element table-element-2">{% if user.is_superuser %}System-Admin{% elif user.is_admin %}Admin{% elif user.is_staff %}Mitarbeiter{% elif not user.is_guest %}Schüler{% elif user.is_guest %}Gast{% endif %}</div>
+        </div>
+        <div class="table-row">
+            <div class="table-row-element table-element-1">Automatische Rollen via itslearning</div>
+            <div class="table-row-element table-element-2">{% if user.allow_auto_role %}Ja{% else %}Nein{% endif %}</div>
+        </div>
+        <div class="table-row">
+            <div class="table-row-element table-element-1">Erste Anmeldung</div>
+            <div class="table-row-element table-element-2">{% if user.use_12_hour_time_format %}{{user.date_joined|date:'j. F Y'}}, {{ user.date_joined|time:"h:i a" }}{% else %}{{user.date_joined|date:'j. F Y'}}, {{ user.date_joined|time:"H:i" }}{% endif %}</div>
+        </div>
+        <div class="table-row">
+            <div class="table-row-element table-element-1">Letzte Anmeldung</div>
+            <div class="table-row-element table-element-2">{% if user.use_12_hour_time_format %}{{user.last_login|date:'j. F Y'}}, {{ user.last_login|time:"h:i a" }}{% else %}{{user.last_login|date:'j. F Y'}}, {{ user.last_login|time:"H:i" }}{% endif %}</div>
+        </div>
+        <div class="table-row">
+            <div class="table-row-element table-element-1">Profilbild-URL</div>
+            <div class="table-row-element table-element-2">{% if user.profile_image_url %}<a href="{{ user.profile_image_url }}">{{ user.profile_image_url }}</a>{% else %}Kein Profilbild{% endif %}</div>
+        </div>
+        <div class="table-row">
+            <div class="table-row-element table-element-1">Bevorzugte Sprache</div>
+            <div class="table-row-element table-element-2">{{ user.language }}</div>
+        </div>
+        <div class="table-row">
+            <div class="table-row-element table-element-1">Zwölf-Stunden Zeitformat</div>
+            <div class="table-row-element table-element-2">{% if user.use_12_hour_time_format %}Ja{% else %}Nein{% endif %}</div>
+        </div>
+    </div>
+</div>
+{% if tickets_data %}
+    <h2>Deine Tickets</h2>
+    <div class="ticket-boxes-area">
+        {% for my_ticket in tickets_data %}
+            <div class="ticket-box created-ticket" tabindex="0" onclick="loadAjaxContent('{% url 'ticket-management' %}ticket-{{ my_ticket.id }}/')">
+                <div class="ticket-box-header">
+                    <h3>{{ my_ticket.status_label }}</h3>
+                    <h2>{{ my_ticket.title }}</h2>
+                    <p>{{ my_ticket.description }}</p>
+                </div>
+                <div class="ticket-box-footer">
+                    <img class="ticket-box-footer-element" src="{% if my_ticket.created_by__profile_image_url %}{{ my_ticket.created_by__profile_image_url }}{% endif %}" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
+                    <div class="ticket-box-footer-element creation-details">
+                        <p>{{ my_ticket.created_by__first_name }} {{ my_ticket.created_by__last_name }}</p>
+                        {% if user.use_12_hour_time_format %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"h:i a" }}</p>{% else %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"H:i" }}</p>{% endif %}
+                    </div>
+                    <div class="ticket-box-footer-element view-more-button">Details</div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+<script>
+    document.title ='Account – SZUT Inventur Management';
+    $('head').append('<link rel="stylesheet" id="custom-css" href="{% static 'css/account.css' %}" />');
+</script>

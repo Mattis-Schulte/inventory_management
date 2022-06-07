@@ -535,6 +535,11 @@ a {
   margin-right: 0.8rem;
 }
 
+.table-row-element a {
+  font-weight: inherit;
+  text-decoration: underline;
+}
+
 .table-row-link {
   cursor: pointer;
 }
@@ -574,6 +579,7 @@ a {
   max-width: 500px;
   flex: 1 1 325px;
   cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
 }
 
 .ticket-box-header {
@@ -706,6 +712,10 @@ input[type="search"]::-webkit-search-decoration {
   }
 
   .table-body .table-row-link:hover, .table-body .table-row-link:focus {
+    background-color: var(--table-row-color-highlight);
+  }
+
+  .ticket-box:hover, .ticket-box:focus {
     background-color: var(--table-row-color-highlight);
   }
 }

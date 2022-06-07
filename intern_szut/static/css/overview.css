@@ -1,0 +1,25 @@
+.table-row-element:first-child {
+  flex: 1.6 1.6 0;
+}
+
+.table-row-element:nth-child(3) {
+  flex: 1 1 0;
+}
+
+@media screen and (max-width: 670px) {
+  .view-more-button {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 570px) {
+  .table-row-element i  {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .table-row-element:nth-child(2) {
+    display: none;
+  }
+}

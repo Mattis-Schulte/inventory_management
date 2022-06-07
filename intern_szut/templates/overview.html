@@ -1,4 +1,61 @@
 {% load static %}
-<script>document.title = 'Übersicht – SZUT Inventur Management'; $('head').append('<link rel="stylesheet" id="custom-css" href="{% static 'css/overview.css' %}" />');</script>
 <h1>Übersicht</h1>
-<h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1><h1>Übersicht</h1>
+{% if tickets_data %}
+    <h2>Neusten offenen Tickets</h2>
+    <div class="ticket-boxes-area">
+        {% for my_ticket in tickets_data %}
+            <div class="ticket-box created-ticket" tabindex="0" onclick="loadAjaxContent('{% url 'ticket-management' %}ticket-{{ my_ticket.id }}/')">
+                <div class="ticket-box-header">
+                    <h3>{{ my_ticket.status_label }}</h3>
+                    <h2>{{ my_ticket.title }}</h2>
+                    <p>{{ my_ticket.description }}</p>
+                </div>
+                <div class="ticket-box-footer">
+                    <img class="ticket-box-footer-element" src="{% if my_ticket.created_by__profile_image_url %}{{ my_ticket.created_by__profile_image_url }}{% endif %}" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
+                    <div class="ticket-box-footer-element creation-details">
+                        <p>{{ my_ticket.created_by__first_name }} {{ my_ticket.created_by__last_name }}</p>
+                        {% if user.use_12_hour_time_format %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"h:i a" }}</p>{% else %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"H:i" }}</p>{% endif %}
+                    </div>
+                    <div class="ticket-box-footer-element view-more-button">Details</div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <h2 style="margin-bottom: 0.25rem;">Neusten offenen Tickets</h2>
+    <div class="ticket-boxes-area" style="margin-top: 0;">
+        <h3>Keine offenen Tickets vorhanden.</h3>
+    </div>
+{% endif %}
+<h2>Nicht funktions&shy;fähige Geräte</h2>
+<div class="table">
+    <div class="table-head">
+        <div class="table-row">
+            <div class="table-row-element table-element-1">Geräte&shy;kategorie</div>
+            <div class="table-row-element table-element-2">Name</div>
+            <div class="table-row-element table-element-3">Raum</div>
+            <div class="table-row-element view-more-button" style="visibility: hidden;">Details</div>
+        </div>
+    </div>
+    <div class="table-body">
+        {% if devices_data %}
+            {% for device in devices_data %}
+            <div class="table-row table-row-link" tabindex="0" onclick="loadAjaxContent('{% url 'devices' %}device-{{ device.id }}/')">
+                <div class="table-row-element table-element-1">{% if device.device_category__icon %}<i class="{{ device.device_category__icon }}"></i>{% endif %}{{ device.device_category__name }}</div>
+                <div class="table-row-element table-element-2">{{ device.name }}</div>
+                <div class="table-row-element table-element-3">{{ device.room__name }}</div>
+                <div class="table-row-element view-more-button">Details</div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="table-row table-row-no-matches">
+                <div class="table-row-element table-element-1">Keine Geräte vorhanden</div>
+                <div class="table-row-element view-more-button" style="visibility: hidden;">Details</div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+<script>
+   document.title = 'Übersicht – SZUT Inventur Management';
+   $('head').append('<link rel="stylesheet" id="custom-css" href="{% static 'css/overview.css' %}" />');
+</script>
