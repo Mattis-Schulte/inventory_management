@@ -29,9 +29,9 @@
                 <h1>SZUT Inventur</h1>
             </a>
             <div class="top-bar-search" style="">
-                <form action="{% url 'search' %}" role="search">
+                <form id="search-form" action="{% url 'search' %}" method="get" role="search">
                     <i class="bi bi-search" role="presentation"></i>
-                    <input type="search" name="q" placeholder="Suche nach Räumen, Geräten und Tickets ...">
+                    <input type="search" name="q" placeholder="Suche nach Räumen, Geräten und Tickets ..." maxlength="500">
                 </form>
             </div>
             <div class="account-card-wrapper">
@@ -54,7 +54,7 @@
                             </ul>
                         </div>
                     {% else %}
-                        <form id="login-form" class="login-form" action="{% url 'login' %}" method="post" style="">
+                        <form id="login-form" class="login-form" action="{% url 'login' %}" method="post">
                             {% csrf_token %}
                             <label for="username">Benutzername</label>
                             <input type="text" name="username" required>
@@ -78,9 +78,9 @@
         <nav class="nav-side-bar" role="navigation">
             <ul>
                 <li>
-                    <form action="{% url 'search' %}" role="search">
+                    <form id="sidebar-search-form" action="{% url 'search' %}" method="get" role="search">
                         <i class="bi bi-search" role="presentation"></i>
-                        <input type="search" name="q" placeholder="Suche nach ...">
+                        <input type="search" name="q" placeholder="Suche nach ..." maxlength="500">
                     </form>
                 </li>
                 <li><a id="overview" href="{% url 'overview' %}" onclick="loadAjaxContent('{% url 'overview' %}');return false"><i class="bi bi-file-earmark-post"></i>Übersicht</a></li>

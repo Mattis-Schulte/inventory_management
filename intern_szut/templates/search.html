@@ -1,0 +1,83 @@
+{% load static %}
+<h1>Suche</h1>
+{% if tickets_data or devices_data or room_data %}<h3>Ergebnisse für "{{ search_request_short }}"</h3>{% else %}<h3>Keine Ergebnisse für "{{ search_request_short }}"</h3>{% endif %}
+{% if tickets_data %}
+    <h2>Tickets</h2>
+    <div class="ticket-boxes-area">
+        {% for my_ticket in tickets_data %}
+            <div class="ticket-box created-ticket" tabindex="0" onclick="loadAjaxContent('{% url 'ticket-management' %}ticket-{{ my_ticket.id }}/')">
+                <div class="ticket-box-header">
+                    <h3>{{ my_ticket.status_label }}</h3>
+                    <h2>{{ my_ticket.title }}</h2>
+                    <p>{{ my_ticket.description }}</p>
+                </div>
+                <div class="ticket-box-footer">
+                    <img class="ticket-box-footer-element" src="{% if my_ticket.created_by__profile_image_url %}{{ my_ticket.created_by__profile_image_url }}{% endif %}" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
+                    <div class="ticket-box-footer-element creation-details">
+                        <p>{{ my_ticket.created_by__first_name }} {{ my_ticket.created_by__last_name }}</p>
+                        {% if user.use_12_hour_time_format %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"h:i a" }}</p>{% else %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"H:i" }}</p>{% endif %}
+                    </div>
+                    <div class="ticket-box-footer-element view-more-button">Details</div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% if devices_data %}
+    <h2>Geräte</h2>
+    <div class="table">
+        <div class="table-head">
+            <div class="table-row">
+                <div class="table-row-element table-element-1 device-table-row-element">Geräte&shy;kategorie</div>
+                <div class="table-row-element table-element-2 device-table-row-element">Name</div>
+                <div class="table-row-element table-element-3 device-table-row-element">Raum</div>
+                <div class="table-row-element table-element-4 device-table-row-element">Status</div>
+                <div class="table-row-element view-more-button device-table-row-element" style="visibility: hidden;">Details</div>
+            </div>
+        </div>
+        <div class="table-body">
+            {% for device in devices_data %}
+                <div class="table-row table-row-link" tabindex="0" onclick="loadAjaxContent('{% url 'devices' %}device-{{ device.id }}/')">
+                    <div class="table-row-element table-element-1 device-table-row-element">{% if device.device_category__icon %}<i class="{{ device.device_category__icon }}"></i>{% endif %}{{ device.device_category__name }}</div>
+                    <div class="table-row-element table-element-2 device-table-row-element">{{ device.name }}</div>
+                    <div class="table-row-element table-element-3 device-table-row-element">{{ device.room__name }}</div>
+                    <div class="table-row-element table-element-4 device-table-row-element">{{ device.status_label }}</div>
+                    <div class="table-row-element view-more-button device-table-row-element">Details</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+{% if room_data %}
+    <h2>Räume</h2>
+    <div class="table">
+        <div class="table-head">
+            <div class="table-row">
+                <div class="table-row-element table-element-1 room-table-row-element">Name</div>
+                <div class="table-row-element table-element-2 room-table-row-element">Etage</div>
+                <div class="table-row-element table-element-3 room-table-row-element">Bau&shy;abschnitt</div>
+                <div class="table-row-element view-more-button room-table-row-element" style="visibility: hidden;">Details</div>
+            </div>
+        </div>
+        <div class="table-body">
+            {% for room in room_data %}
+                <div class="table-row table-row-link" tabindex="0" onclick="loadAjaxContent('{% url 'rooms' %}{{ room.name }}/')">
+                    <div class="table-row-element table-element-1 room-table-row-element">{{ room.name }}</div>
+                    <div class="table-row-element table-element-2 room-table-row-element">{{ room.floor__name }}</div>
+                    <div class="table-row-element table-element-3 room-table-row-element">{{ room.building_section__name }}</div>
+                    <div class="table-row-element view-more-button room-table-row-element">Details</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+<script>
+    document.title ='Suche nach {{ search_request_short }} – SZUT Inventur Management';
+    $('head').append('<link rel="stylesheet" id="custom-css" href="{% static 'css/search.css' %}" />');
+
+    $(document).ready(function(){
+        if ($('#search-form').find('input').val() === '') {
+            $(this).find('input').val('{{ search_request }}');
+        }
+    });
+</script>

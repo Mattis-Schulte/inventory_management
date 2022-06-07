@@ -47,27 +47,35 @@
         </div>
     </div>
 </div>
-{% if tickets_data %}
-    <h2>Tickets zu diesem Gerät</h2>
-    <div class="ticket-boxes-area">
-        {% for my_ticket in tickets_data %}
-            <div class="ticket-box created-ticket" tabindex="0" onclick="loadAjaxContent('{% url 'ticket-management' %}ticket-{{ my_ticket.id }}/')">
-                <div class="ticket-box-header">
-                    <h3>{{ my_ticket.status_label }}</h3>
-                    <h2>{{ my_ticket.title }}</h2>
-                    <p>{{ my_ticket.description }}</p>
-                </div>
-                <div class="ticket-box-footer">
-                    <img class="ticket-box-footer-element" src="{% if my_ticket.created_by__profile_image_url %}{{ my_ticket.created_by__profile_image_url }}{% endif %}" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
-                    <div class="ticket-box-footer-element creation-details">
-                        <p>{{ my_ticket.created_by__first_name }} {{ my_ticket.created_by__last_name }}</p>
-                        {% if user.use_12_hour_time_format %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"h:i a" }}</p>{% else %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"H:i" }}</p>{% endif %}
-                    </div>
-                    <div class="ticket-box-footer-element view-more-button">Details</div>
-                </div>
+{% if perms.inventory_management.add_ticket or tickets_data %}
+<h2>Tickets zu diesem Gerät</h2>
+<div class="ticket-boxes-area">
+    {% if perms.inventory_management.add_ticket %}
+        <div class="ticket-box create-new-ticket" tabindex="0" onclick="loadAjaxContent('{% url 'create-new-ticket' %}?device-id={{ device_data.id }}')">
+            <div class="plus-icon">
+                <i class="bi bi-plus-lg"></i>
             </div>
-        {% endfor %}
-    </div>
+            <h3>Neues Ticket erstellen</h3>
+        </div>
+    {% endif %}
+    {% for ticket in tickets_data %}
+        <div class="ticket-box created-ticket" tabindex="0" onclick="loadAjaxContent('{% url 'ticket-management' %}ticket-{{ ticket.id }}/')">
+            <div class="ticket-box-header">
+                <h3>{{ ticket.status_label }}</h3>
+                <h2>{{ ticket.title }}</h2>
+                <p>{{ ticket.description }}</p>
+            </div>
+            <div class="ticket-box-footer">
+                <img class="ticket-box-footer-element" src="{% if ticket.created_by__profile_image_url %}{{ ticket.created_by__profile_image_url }}{% endif %}" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
+                <div class="ticket-box-footer-element creation-details">
+                    <p>{{ ticket.created_by__first_name }} {{ ticket.created_by__last_name }}</p>
+                    {% if user.use_12_hour_time_format %}<p>{{ticket.last_change_at|date:'j. F Y'}}, {{ ticket.last_change_at|time:"h:i a" }}</p>{% else %}<p>{{ticket.last_change_at|date:'j. F Y'}}, {{ ticket.last_change_at|time:"H:i" }}</p>{% endif %}
+                </div>
+                <div class="ticket-box-footer-element view-more-button">Details</div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
 {% endif %}
 <script>
     document.title ='{{ device_data.name }} – SZUT Inventur Management';

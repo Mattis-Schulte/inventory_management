@@ -42,9 +42,9 @@ class MyUserManager(BaseUserManager):
 
 
 class MyUser(AbstractUser):
-    person_id = models.CharField(verbose_name=_('itslearning Person-ID'), max_length=10, unique=True)
-    username = models.CharField(verbose_name=_('Benutzername'), max_length=25, unique=True)
-    first_name = models.CharField(verbose_name=_('Vorname'), max_length=25)
+    person_id = models.CharField(verbose_name=_('itslearning Person-ID'), max_length=12, unique=True)
+    username = models.CharField(verbose_name=_('Benutzername'), max_length=50, unique=True)
+    first_name = models.CharField(verbose_name=_('Vorname'), max_length=50)
     last_name = models.CharField(verbose_name=_('Nachname'), max_length=25)
     language = models.CharField(verbose_name=_('Sprache'), max_length=10, default='de-DE')
     profile_image_url = models.CharField(verbose_name=_('Profilbild-URL'), max_length=100, null=True, blank=True)
@@ -70,7 +70,7 @@ class BuildingSection(models.Model):
         verbose_name_plural = _('Bauabschnitte')
 
     name = models.CharField(verbose_name=_('Name'), max_length=35, unique=True)
-    description = models.TextField(verbose_name=_('Beschreibung'), max_length=280, null=True, blank=True)
+    description = models.TextField(verbose_name=_('Beschreibung'), max_length=560, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -82,7 +82,7 @@ class Floor(models.Model):
         verbose_name_plural = _('Etagen')
 
     name = models.CharField(verbose_name=_('Name'), max_length=35, unique=True)
-    description = models.TextField(verbose_name=_('Beschreibung'), max_length=280, null=True, blank=True)
+    description = models.TextField(verbose_name=_('Beschreibung'), max_length=560, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -96,7 +96,7 @@ class Room(models.Model):
     name = models.CharField(verbose_name=_('Name'), max_length=35, unique=True)
     building_section = models.ForeignKey(BuildingSection, verbose_name=_('Bauabschnitt'), on_delete=models.PROTECT, default=None)
     floor = models.ForeignKey(Floor, verbose_name=_('Etage'), on_delete=models.PROTECT, default=None)
-    description = models.TextField(verbose_name=_('Beschreibung'), max_length=280, null=True, blank=True)
+    description = models.TextField(verbose_name=_('Beschreibung'), max_length=560, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -109,7 +109,7 @@ class DeviceCategory(models.Model):
 
     name = models.CharField(verbose_name=_('Name'), max_length=35, unique=True)
     icon = models.CharField(verbose_name=_('Bootstrap-Icon (icons.getbootstrap.com)'), max_length=60, validators=[bootstrap_icon_validator], null=True, blank=True)
-    description = models.TextField(verbose_name=_('Beschreibung'), max_length=280, null=True, blank=True)
+    description = models.TextField(verbose_name=_('Beschreibung'), max_length=560, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -121,7 +121,7 @@ class DeviceManufacturer(models.Model):
         verbose_name_plural = _('Gerätehersteller')
 
     name = models.CharField(verbose_name=_('Name'), max_length=35, unique=True)
-    description = models.TextField(verbose_name=_('Beschreibung'), max_length=280, null=True, blank=True)
+    description = models.TextField(verbose_name=_('Beschreibung'), max_length=560, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -139,15 +139,15 @@ class Device(models.Model):
 
     device_category = models.ForeignKey(DeviceCategory, verbose_name=_('Gerätekategorie'), on_delete=models.CASCADE, default=None)
     room = models.ForeignKey(Room, verbose_name=_('Raum'), on_delete=models.CASCADE, default=None)
-    name = models.CharField(verbose_name=_('Name'), max_length=35)
+    name = models.CharField(verbose_name=_('Name'), max_length=50)
     price = models.DecimalField(verbose_name=_('Preis'), max_digits=10, decimal_places=2, null=True, blank=True)
     device_manufacturer = models.ForeignKey(DeviceManufacturer, verbose_name=_('Gerätehersteller'), on_delete=models.CASCADE, null=True, blank=True)
     purchase_data = models.DateField(verbose_name=_('Anschaffungsdatum'), null=True, blank=True)
-    serial_number = models.CharField(verbose_name=_('Seriennummer'), max_length=35, null=True, blank=True)
+    serial_number = models.CharField(verbose_name=_('Seriennummer'), max_length=50, null=True, blank=True)
     warranty_period_years = models.IntegerField(verbose_name=_('Garantiezeit in Jahren'), choices=[(i, i) for i in range(1, 100)], null=True, blank=True)
     warranty_period_months = models.IntegerField(verbose_name=_('Garantiezeit in Monaten'), choices=[(i, i) for i in range(1, 12)], null=True, blank=True)
     status = models.IntegerField(verbose_name=_('Aktueller Status'), choices=StatusOptions.choices, null=True, blank=True)
-    description = models.TextField(verbose_name=_('Beschreibung'), max_length=280, null=True, blank=True)
+    description = models.TextField(verbose_name=_('Beschreibung'), max_length=560, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -159,13 +159,12 @@ class Ticket(models.Model):
         verbose_name_plural = _('Tickets')
 
     class StatusOptions(models.IntegerChoices):
-        OPEN = 2, _('Offen')
-        IN_WORK = 1, _('In Bearbeitung')
+        OPEN = 1, _('Offen')
         CLOSED = 0, _('Geschlossen')
 
     device = models.ForeignKey(Device, verbose_name=_('Gerät'), on_delete=models.CASCADE, default=None)
-    title = models.CharField(verbose_name=_('Titel'), max_length=35)
-    description = models.TextField(verbose_name=_('Beschreibung'), max_length=280, null=True, blank=True)
+    title = models.CharField(verbose_name=_('Titel'), max_length=40)
+    description = models.TextField(verbose_name=_('Beschreibung'), max_length=560)
     status = models.IntegerField(verbose_name=_('Aktueller Status'), choices=StatusOptions.choices)
     created_at = models.DateTimeField(verbose_name=_('Erstellt am'), auto_now=True)
     created_by = models.ForeignKey(MyUser, verbose_name=_('Erstellt von'), on_delete=models.CASCADE)
@@ -181,7 +180,7 @@ class TicketComment(models.Model):
         verbose_name_plural = _('Ticket-Antworten')
 
     ticket = models.ForeignKey(Ticket, verbose_name=_('Ticket'), on_delete=models.CASCADE, default=None)
-    comment = models.TextField(verbose_name=_('Antwort'), max_length=280)
+    comment = models.TextField(verbose_name=_('Antwort'), max_length=560)
     created_at = models.DateTimeField(verbose_name=_('Erstellt am'), auto_now=True)
     created_by = models.ForeignKey(MyUser, verbose_name=_('Erstellt von'), on_delete=models.CASCADE)
 

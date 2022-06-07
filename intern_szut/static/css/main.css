@@ -576,7 +576,7 @@ a {
   box-shadow: 0 2px 4px var(--shadow-color);
   border-radius: 1rem;
   padding: 1.5rem;
-  max-width: 500px;
+  max-width: 450px;
   flex: 1 1 325px;
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
@@ -621,7 +621,7 @@ a {
   align-items: center;
   gap: 0.75rem;
   text-align: center;
-  padding: 2rem;
+  min-height: 210px;
 }
 
 .plus-icon {

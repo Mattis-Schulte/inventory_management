@@ -2,7 +2,7 @@ var current_highlight;
 
 $(document).ready(function() {
   $('#login-form').on('submit', function(e){
-     e.preventDefault();
+      e.preventDefault();
       let form = $(this);
       $.ajax({
             type: form.attr('method'),
@@ -37,8 +37,17 @@ $(document).ready(function() {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             },
+      });
+  });
 
-        });
+  $('#search-form').on('keyup change submit', function(e){
+      let form = $(this);
+      makeSearch(e, form);
+  });
+
+  $('#sidebar-search-form').on('submit', function(e){
+      let form = $(this);
+      makeSearch(e, form);
   });
 
   $('.menu-button-wrapper, .nav-side-bar-overlay').click(function() {
@@ -64,7 +73,7 @@ $(document).ready(function() {
   });
 });
 
-loadAjaxContent = function(page, push_state=true) {
+loadAjaxContent = function(page, push_state=true, clear_search=true) {
     $.ajax({
         url: page,
         cache: false,
@@ -82,7 +91,10 @@ loadAjaxContent = function(page, push_state=true) {
             }
             setHighlight(page.split('/')[1]);
             $('.main-content-wrapper').animate({scrollTop: 0}, 0);
-            },
+            if (clear_search) {
+                $('#search-form').find('input').val('');
+            }
+        },
         error: function() {
             $('#custom-css').remove();
             loadContentError();
@@ -95,7 +107,7 @@ loadAjaxContent = function(page, push_state=true) {
                 window.history.pushState(null, null, page);
             }
             setHighlight(page.split('/')[1]);
-            },
+        },
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
         }
@@ -126,18 +138,38 @@ logout = function(url) {
     });
 }
 
-loadContentError = function() {
+function loadContentError() {
     document.title = 'Fehler – SZUT Inventur Management';
     $('#load-content-error').show();
     $('#page-content').html('');
 }
 
-setHighlight = function(to_highlight) {
+function setHighlight(to_highlight) {
     $('#' + to_highlight).addClass('highlight');
     if (current_highlight !== to_highlight) {
         $('#' + current_highlight).removeClass('highlight');
     }
     current_highlight = to_highlight;
+}
+
+function makeSearch(e, form) {
+    e.preventDefault();
+    var search_base_url = form.attr('action');
+    var search_value = form.find('input').val();
+    if (search_value.length > 0) {
+        var search_url = search_base_url + '?q=' + search_value;
+        if (e.type !== 'submit' || e.keyCode !== 13) {
+            loadAjaxContent(search_url, false, false);
+        }
+    } else {
+        loadAjaxContent('/overview/', true);
+    }
+
+    if (e.type === 'submit' || e.keyCode === 13 || e.type === 'change') {
+        document.activeElement.blur();
+        form.find('input').blur();
+        loadAjaxContent(search_url, true, false);
+    }
 }
 
 function fetchFilter() {

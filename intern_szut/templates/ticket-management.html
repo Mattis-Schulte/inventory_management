@@ -3,39 +3,35 @@
 {% if user.is_authenticated %}
     {% if not perms.inventory_management.add_ticket %}
         <h2 style="margin-bottom: 0.25rem;">Meine Tickets</h2>
-        <h3>Du hast nicht die Berechtigung neue Tickets zu erstellen.</h3>
+        <h3 style="margin-bottom: 1.5rem;">Du hast nicht die Berechtigung neue Tickets zu erstellen.</h3>
     {% else %}
         <h2>Meine Tickets</h2>
     {% endif %}
-    <div class="ticket-boxes-area">
-        {% if perms.inventory_management.add_ticket %}
-            <div class="ticket-box create-new-ticket" tabindex="0">
-                <div class="plus-icon">
-                    <i class="bi bi-plus-lg"></i>
-                </div>
-                <h3>Neues Ticket erstellen</h3>
-            </div>
-        {% endif %}
-        {% for my_ticket in tickets_data %}
-            {% if my_ticket.created_by__id == user.id %}
-                <div class="ticket-box created-ticket" tabindex="0" onclick="loadAjaxContent('{% url 'ticket-management' %}ticket-{{ my_ticket.id }}/')">
-                    <div class="ticket-box-header">
-                        <h3>{{ my_ticket.status_label }}</h3>
-                        <h2>{{ my_ticket.title }}</h2>
-                        <p>{{ my_ticket.description }}</p>
-                    </div>
-                    <div class="ticket-box-footer">
-                        <img class="ticket-box-footer-element" src="{% if my_ticket.created_by__profile_image_url %}{{ my_ticket.created_by__profile_image_url }}{% endif %}" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
-                        <div class="ticket-box-footer-element creation-details">
-                            <p>{{ my_ticket.created_by__first_name }} {{ my_ticket.created_by__last_name }}</p>
-                            {% if user.use_12_hour_time_format %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"h:i a" }}</p>{% else %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"H:i" }}</p>{% endif %}
+    {% if perms.inventory_management.add_ticket and my_tickets_len %}
+        <div class="ticket-boxes-area">
+            {% for my_ticket in tickets_data %}
+                {% if my_ticket.created_by__id == user.id %}
+                    <div class="ticket-box created-ticket" tabindex="0" onclick="loadAjaxContent('{% url 'ticket-management' %}ticket-{{ my_ticket.id }}/')">
+                        <div class="ticket-box-header">
+                            <h3>{{ my_ticket.status_label }}</h3>
+                            <h2>{{ my_ticket.title }}</h2>
+                            <p>{{ my_ticket.description }}</p>
                         </div>
-                        <div class="ticket-box-footer-element view-more-button">Details</div>
+                        <div class="ticket-box-footer">
+                            <img class="ticket-box-footer-element" src="{% if my_ticket.created_by__profile_image_url %}{{ my_ticket.created_by__profile_image_url }}{% endif %}" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
+                            <div class="ticket-box-footer-element creation-details">
+                                <p>{{ my_ticket.created_by__first_name }} {{ my_ticket.created_by__last_name }}</p>
+                                {% if user.use_12_hour_time_format %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"h:i a" }}</p>{% else %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"H:i" }}</p>{% endif %}
+                            </div>
+                            <div class="ticket-box-footer-element view-more-button">Details</div>
+                        </div>
                     </div>
-                </div>
-            {% endif %}
-        {% endfor %}
-    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% elif perms.inventory_management.add_ticket and not my_tickets_len %}
+        <h3 style="margin-bottom: 1.5rem;">Du hast noch keine Tickets erstellt.</h3>
+    {% endif %}
 {% endif %}
 {% if open_tickets_len %}
     <h2>Offene Tickets</h2>

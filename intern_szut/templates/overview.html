@@ -1,7 +1,7 @@
 {% load static %}
 <h1>Übersicht</h1>
 {% if tickets_data %}
-    <h2>Neusten offenen Tickets</h2>
+    <h2>Neusten Tickets</h2>
     <div class="ticket-boxes-area">
         {% for my_ticket in tickets_data %}
             <div class="ticket-box created-ticket" tabindex="0" onclick="loadAjaxContent('{% url 'ticket-management' %}ticket-{{ my_ticket.id }}/')">
@@ -22,9 +22,9 @@
         {% endfor %}
     </div>
 {% else %}
-    <h2 style="margin-bottom: 0.25rem;">Neusten offenen Tickets</h2>
+    <h2 style="margin-bottom: 0.25rem;">Neusten Tickets</h2>
     <div class="ticket-boxes-area" style="margin-top: 0;">
-        <h3>Keine offenen Tickets vorhanden.</h3>
+        <h3>Keine Tickets vorhanden.</h3>
     </div>
 {% endif %}
 <h2>Nicht funktions&shy;fähige Geräte</h2>

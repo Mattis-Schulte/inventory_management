@@ -28,10 +28,6 @@
             <div class="table-row-element table-element-2">{% if user.is_superuser %}System-Admin{% elif user.is_admin %}Admin{% elif user.is_staff %}Mitarbeiter{% elif not user.is_guest %}Schüler{% elif user.is_guest %}Gast{% endif %}</div>
         </div>
         <div class="table-row">
-            <div class="table-row-element table-element-1">Automatische Rollen via itslearning</div>
-            <div class="table-row-element table-element-2">{% if user.allow_auto_role %}Ja{% else %}Nein{% endif %}</div>
-        </div>
-        <div class="table-row">
             <div class="table-row-element table-element-1">Erste Anmeldung</div>
             <div class="table-row-element table-element-2">{% if user.use_12_hour_time_format %}{{user.date_joined|date:'j. F Y'}}, {{ user.date_joined|time:"h:i a" }}{% else %}{{user.date_joined|date:'j. F Y'}}, {{ user.date_joined|time:"H:i" }}{% endif %}</div>
         </div>
@@ -41,7 +37,7 @@
         </div>
         <div class="table-row">
             <div class="table-row-element table-element-1">Profilbild-URL</div>
-            <div class="table-row-element table-element-2">{% if user.profile_image_url %}<a href="{{ user.profile_image_url }}">{{ user.profile_image_url }}</a>{% else %}Kein Profilbild{% endif %}</div>
+            <div class="table-row-element table-element-2">{% if user.profile_image_url %}<a target="_blank" rel="noopener noreferrer" href="{{ user.profile_image_url }}">{{ user.profile_image_url }}</a>{% else %}Kein Profilbild{% endif %}</div>
         </div>
         <div class="table-row">
             <div class="table-row-element table-element-1">Bevorzugte Sprache</div>
