@@ -154,8 +154,8 @@ function setHighlight(to_highlight) {
 
 function makeSearch(e, form) {
     e.preventDefault();
-    var search_base_url = form.attr('action');
-    var search_value = form.find('input').val();
+    let search_base_url = form.attr('action');
+    let search_value = form.find('input').val();
     if (search_value.length > 0) {
         var search_url = search_base_url + '?q=' + search_value;
         if (e.type !== 'submit' || e.keyCode !== 13) {
@@ -173,10 +173,10 @@ function makeSearch(e, form) {
 }
 
 function fetchFilter() {
-    var filter_values = [];
+    let filter_values = [];
     $('.filter-box-item').each(function() {
         var filter_value = $(this).find('select').val();
-        var filter_id = $(this).find('select').attr('id');
+        let filter_id = $(this).find('select').attr('id');
         filter_values.push({
             'id': filter_id,
             'value': filter_value
@@ -186,14 +186,14 @@ function fetchFilter() {
 }
 
 function applyFilter() {
-    var filter_values = fetchFilter();
+    let filter_values = fetchFilter();
 
-    var filter_url = location.pathname;
-    var number_of_filters = filter_values.length - filter_values.filter(function(item) { return item.value === 'all' }).length;
+    let filter_url = location.pathname;
+    let number_of_filters = filter_values.length - filter_values.filter(function(item) { return item.value === 'all' }).length;
 
     if (number_of_filters > 0) {
         filter_url += '?';
-        for (var i = 0; i < filter_values.length; i++) {
+        for (let i = 0; i < filter_values.length; i++) {
             if (filter_values[i].value !== 'all') {
                 filter_url += filter_values[i].id + '=' + filter_values[i].value + '&';
             }

@@ -1,1 +1,18 @@
-Ticket Details
+{% load static %}
+<h1>{{ ticket_data.title }}</h1>
+<h3>Ticket zum Gerät: <a href="{% url 'devices' %}device-{{ ticket_data.device__id }}/" onclick="loadAjaxContent('{% url 'devices' %}device-{{ ticket_data.device__id }}/');return false">{{ ticket_data.device__name }}</a></h3>
+<div class="ticket-content">
+    <div class="ticket-header">
+        <img class="ticket-header-element" src="{% if ticket_data.created_by__profile_image_url %}{{ ticket_data.created_by__profile_image_url }}{% endif %}" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
+        <h3 class="ticket-header-element creation-details">{{ ticket_data.created_by__first_name }} {{ ticket_data.created_by__last_name }} am {% if user.use_12_hour_time_format %}{{ticket_data.created_at|date:'j. F Y'}}, {{ ticket_data.created_at|time:"h:i a" }}{% else %}{{ticket_data.created_at|date:'j. F Y'}}, {{ ticket_data.created_at|time:"H:i" }}{% endif %}</h3>
+        <h3 class="ticket-header-element ticket-status-details"><span style="white-space: nowrap;">Status:</span> {{ ticket_data.status_label }}</h3>
+    </div>
+    <div class="ticket-body">
+        <h3>Beschreibung:</h3>
+        <p class="ticket-body-element ticket-description">{{ ticket_data.description|linebreaksbr }}</p>
+    </div>
+</div>
+<script>
+    document.title ='{{ ticket_data.title }} – SZUT Inventur Management';
+    $('head').append('<link rel="stylesheet" id="custom-css" href="{% static 'css/ticket-details.css' %}" />');
+</script>

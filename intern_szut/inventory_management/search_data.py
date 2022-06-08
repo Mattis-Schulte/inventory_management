@@ -12,7 +12,7 @@ class SearchData:
             if current_keyword_query and not any(ticket in tickets_data for ticket in current_keyword_query):
                 tickets_data += current_keyword_query
 
-        return tickets_data[:4]
+        return tickets_data[:3]
 
     @classmethod
     def search_devices(cls, search_request, data_to_search):
@@ -24,7 +24,7 @@ class SearchData:
             if current_keyword_query and not any(device in devices_data for device in current_keyword_query):
                 devices_data += current_keyword_query
 
-        return devices_data[:6]
+        return devices_data[:5]
 
     @classmethod
     def search_rooms(cls, search_request, data_to_search):
@@ -36,4 +36,4 @@ class SearchData:
             if current_keyword_query and not any(room in room_data for room in current_keyword_query):
                 room_data += current_keyword_query
 
-        return room_data[:6]
+        return room_data[:5]

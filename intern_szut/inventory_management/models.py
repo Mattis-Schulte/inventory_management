@@ -164,9 +164,9 @@ class Ticket(models.Model):
 
     device = models.ForeignKey(Device, verbose_name=_('Gerät'), on_delete=models.CASCADE, default=None)
     title = models.CharField(verbose_name=_('Titel'), max_length=40)
-    description = models.TextField(verbose_name=_('Beschreibung'), max_length=560)
+    description = models.TextField(verbose_name=_('Beschreibung'), max_length=1680)
     status = models.IntegerField(verbose_name=_('Aktueller Status'), choices=StatusOptions.choices)
-    created_at = models.DateTimeField(verbose_name=_('Erstellt am'), auto_now=True)
+    created_at = models.DateTimeField(verbose_name=_('Erstellt am'), auto_now_add=True)
     created_by = models.ForeignKey(MyUser, verbose_name=_('Erstellt von'), on_delete=models.CASCADE)
     last_change_at = models.DateTimeField(verbose_name=_('Letzte Änderung am'), auto_now=True)
 
@@ -174,15 +174,15 @@ class Ticket(models.Model):
         return self.title
 
 
-class TicketComment(models.Model):
-    class Meta:
-        verbose_name = _('Ticket-Antwort')
-        verbose_name_plural = _('Ticket-Antworten')
-
-    ticket = models.ForeignKey(Ticket, verbose_name=_('Ticket'), on_delete=models.CASCADE, default=None)
-    comment = models.TextField(verbose_name=_('Antwort'), max_length=560)
-    created_at = models.DateTimeField(verbose_name=_('Erstellt am'), auto_now=True)
-    created_by = models.ForeignKey(MyUser, verbose_name=_('Erstellt von'), on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.comment
+# class TicketComment(models.Model):
+#    class Meta:
+#        verbose_name = _('Ticket-Antwort')
+#        verbose_name_plural = _('Ticket-Antworten')
+#
+#    ticket = models.ForeignKey(Ticket, verbose_name=_('Ticket'), on_delete=models.CASCADE, default=None)
+#    comment = models.TextField(verbose_name=_('Antwort'), max_length=560)
+#    created_at = models.DateTimeField(verbose_name=_('Erstellt am'), auto_now=True)
+#    created_by = models.ForeignKey(MyUser, verbose_name=_('Erstellt von'), on_delete=models.CASCADE)
+#
+#    def __str__(self):
+#        return self.comment

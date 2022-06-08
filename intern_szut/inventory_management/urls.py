@@ -11,6 +11,7 @@ urlpatterns = [
     re_path(r'^devices/device-(?P<device_id>.*)?/$', views.device_details, name='device-details'),
     path('ticket-management/', views.ticket_management, name='ticket-management'),
     path('ticket-management/create-new-ticket/', views.create_new_ticket, name='create-new-ticket'),
+    path('ticket-management/create-new-ticket/submit-new-ticket/', views.submit_new_ticket, name='submit-new-ticket'),
     re_path(r'^ticket-management/ticket-(?P<ticket_id>.*)?/$', views.ticket_details, name='ticket-details'),
     path('account/', views.account, name='account'),
     path('account/login/', views.login, name='login'),

@@ -1,1 +1,46 @@
-Neues Ticket erstellen
+{% load static %}
+<h1>Neues Ticket erstellen</h1>
+<h3>Ausgewähltes Gerät: "{{ selected_device_name }}"</h3>
+<form id="create-new-ticket-form" class="create-new-ticket-form" action="{% url 'submit-new-ticket' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="device-id" value="{{ selected_device_id }}">
+    <p class="on-creation-error">Ein Fehler ist aufgetreten</p>
+    <div class="form-group-vertical form-group-title">
+        <label for="title">Titel</label>
+        <input type="text" class="title-input" id="title" name="title" required maxlength="40">
+    </div>
+    <div class="form-group-vertical form-group-description">
+        <label for="description">Beschreibung</label>
+        <textarea class="description-input" id="description" name="description" rows="3" required maxlength="560"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Ticket erstellen</button>
+</form>
+<script>
+    document.title ='Neues Ticket erstellen – SZUT Inventur Management';
+    $('head').append('<link rel="stylesheet" id="custom-css" href="{% static 'css/create-new-ticket.css' %}" />');
+
+    $(document).ready(function() {
+       $('#create-new-ticket-form').on('submit', function(e) {
+           e.preventDefault();
+           let form = $(this);
+           let formData = form.serialize();
+           $.ajax({
+               type: 'POST',
+               url: form.attr('action'),
+               data: formData,
+               success: function(data) {
+                   let id = data.split(': #')[1];
+
+                   if (id) {
+                       loadAjaxContent('{% url 'ticket-management' %}ticket-' + id + '/');
+                   } else {
+                       $('.on-creation-error').show();
+                   }
+               },
+                error: function() {
+                   $('.on-creation-error').show();
+                }
+           });
+       });
+    });
+</script>

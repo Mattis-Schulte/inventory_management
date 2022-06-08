@@ -6,14 +6,14 @@ from inventory_management import filter_rooms, filter_devices, verify_login, get
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 
-from inventory_management.models import BuildingSection, Floor, Room, DeviceCategory, DeviceManufacturer, Device, Ticket, TicketComment
+from inventory_management.models import BuildingSection, Floor, Room, DeviceCategory, DeviceManufacturer, Device, Ticket
 
 
 def search(request):
-    search_request = request.GET['q']
+    search_request = request.GET.get('q')
     if len(search_request) <= 500:
         search_request_short = truncate.Truncate.truncate_data([{'search_request': search_request}], 'search_request', 40)[0]['search_request']
-        tickets_data = search_data.SearchData.search_tickets(search_request, Ticket.objects.order_by('-last_change_at').all().values('id', 'title', 'description', 'status', 'created_by__id', 'created_by__first_name', 'created_by__last_name', 'created_by__profile_image_url', 'last_change_at'))
+        tickets_data = search_data.SearchData.search_tickets(search_request, Ticket.objects.order_by('-created_at').all().values('id', 'title', 'description', 'status', 'created_by__id', 'created_by__first_name', 'created_by__last_name', 'created_by__profile_image_url', 'created_at'))
 
         tickets_data = get_choices.GetChoices.make_labels_readable(tickets_data, Ticket.StatusOptions, 'status')
         tickets_data = truncate.Truncate.truncate_data(tickets_data, 'description', 115)
@@ -32,7 +32,7 @@ def search(request):
 
 
 def overview(request):
-    tickets_data = Ticket.objects.order_by('-last_change_at').all().values('id', 'title', 'description', 'status', 'created_by__id', 'created_by__first_name', 'created_by__last_name', 'created_by__profile_image_url', 'last_change_at')[:8]
+    tickets_data = Ticket.objects.order_by('-created_at').all().values('id', 'title', 'description', 'status', 'created_by__id', 'created_by__first_name', 'created_by__last_name', 'created_by__profile_image_url', 'created_at')[:6]
     tickets_data = get_choices.GetChoices.make_labels_readable(tickets_data, Ticket.StatusOptions, 'status')
     tickets_data = truncate.Truncate.truncate_data(tickets_data, 'description', 115)
 
@@ -127,7 +127,7 @@ def device_details(request, device_id):
             device_data = Device.objects.filter(id=device_id).values('device_category__name', 'device_category__icon', 'room__name', 'price', 'device_manufacturer__name', 'purchase_data', 'warranty_period_years', 'warranty_period_months', 'serial_number', 'name', 'description', 'status', 'id')
             device_data = get_choices.GetChoices.make_labels_readable(device_data, Device.StatusOptions, 'status')[0]
 
-            tickets_data = Ticket.objects.filter(device__id=device_id).order_by('-last_change_at').all().values('id', 'title', 'description', 'status', 'created_by__id', 'created_by__first_name', 'created_by__last_name', 'created_by__profile_image_url', 'last_change_at')[:8]
+            tickets_data = Ticket.objects.filter(device__id=device_id).order_by('-created_at').all().values('id', 'title', 'description', 'status', 'created_by__id', 'created_by__first_name', 'created_by__last_name', 'created_by__profile_image_url', 'created_at')[:8]
             tickets_data = get_choices.GetChoices.make_labels_readable(tickets_data, Ticket.StatusOptions, 'status')
             tickets_data = truncate.Truncate.truncate_data(tickets_data, 'description', 115)
 
@@ -140,7 +140,7 @@ def device_details(request, device_id):
 
 
 def ticket_management(request):
-    tickets_data = Ticket.objects.order_by('-last_change_at').all().values('id', 'title', 'description', 'status', 'created_by__id', 'created_by__first_name', 'created_by__last_name', 'created_by__profile_image_url', 'last_change_at')
+    tickets_data = Ticket.objects.order_by('-created_at').all().values('id', 'title', 'description', 'status', 'created_by__id', 'created_by__first_name', 'created_by__last_name', 'created_by__profile_image_url', 'created_at')
     tickets_data = get_choices.GetChoices.make_labels_readable(tickets_data, Ticket.StatusOptions, 'status')
     tickets_data = truncate.Truncate.truncate_data(tickets_data, 'description', 115)
 
@@ -164,28 +164,55 @@ def ticket_management(request):
 def create_new_ticket(request):
     if request.user.is_authenticated:
         if request.user.has_perm('ticket_management.add_ticket'):
-            if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-                return render(request, 'create-new-ticket.html')
-            else:
-                return render(request, 'index.html', {'current_page_category': 'ticket-management', 'current_page_file': 'create-new-ticket.html'})
+            if request.GET.get('device-id'):
+                selected_device_id = request.GET.get('device-id')
+                if Device.objects.filter(id=selected_device_id).exists():
+                    selected_device_name = Device.objects.filter(id=selected_device_id).values('name')[0]['name']
+
+                    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+                        return render(request, 'create-new-ticket.html', {'selected_device_id': selected_device_id, 'selected_device_name': selected_device_name})
+                    else:
+                        return render(request, 'index.html', {'current_page_category': 'ticket-management', 'current_page_file': 'create-new-ticket.html', 'selected_device_id': selected_device_id, 'selected_device_name': selected_device_name})
 
     return redirect('ticket-management')
+
+
+@csrf_protect
+def submit_new_ticket(request):
+    if request.user.is_authenticated:
+        if request.user.has_perm('ticket_management.add_ticket'):
+            if request.POST.get('device-id'):
+                selected_device_id = request.POST.get('device-id')
+                if Device.objects.filter(id=selected_device_id).exists():
+                    if request.POST.get('title') and request.POST.get('description'):
+                        if 40 >= len(request.POST.get('title')) > 0 and 560 >= len(request.POST.get('description')) > 0:
+                            if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+                                new_ticket = Ticket(title=request.POST.get('title'), description=request.POST.get('description'), created_by=request.user, device=Device.objects.get(id=selected_device_id), status=Ticket.StatusOptions.OPEN)
+                                new_ticket.save()
+
+                                return HttpResponse(f'Successfully created ticket: #{new_ticket.id}')
+
+            return HttpResponse(status=404)
+    return HttpResponse(status=401)
 
 
 def ticket_details(request, ticket_id):
     if ticket_id.isdigit():
         if Ticket.objects.filter(id=ticket_id).exists():
+            ticket_data = Ticket.objects.filter(id=ticket_id).values('id', 'title', 'description', 'status', 'created_by__id', 'created_by__first_name', 'created_by__last_name', 'created_by__profile_image_url', 'created_at', 'device__id', 'device__name')
+            ticket_data = get_choices.GetChoices.make_labels_readable(ticket_data, Ticket.StatusOptions, 'status')[0]
+
             if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-                return render(request, 'ticket-details.html')
+                return render(request, 'ticket-details.html', {'ticket_data': ticket_data})
             else:
-                return render(request, 'index.html', {'current_page_category': 'ticket-management', 'current_page_file': 'ticket_details.html'})
+                return render(request, 'index.html', {'current_page_category': 'ticket-management', 'current_page_file': 'ticket-details.html', 'ticket_data': ticket_data})
 
     return redirect('ticket-management')
 
 
 def account(request):
     if request.user.is_authenticated:
-        tickets_data = Ticket.objects.filter(created_by__id=request.user.id).order_by('-last_change_at').all().values('id', 'title', 'description', 'status', 'created_by__id', 'created_by__first_name', 'created_by__last_name', 'created_by__profile_image_url', 'last_change_at')
+        tickets_data = Ticket.objects.filter(created_by__id=request.user.id).order_by('-created_at').all().values('id', 'title', 'description', 'status', 'created_by__id', 'created_by__first_name', 'created_by__last_name', 'created_by__profile_image_url', 'created_at')
         tickets_data = get_choices.GetChoices.make_labels_readable(tickets_data, Ticket.StatusOptions, 'status')
         tickets_data = truncate.Truncate.truncate_data(tickets_data, 'description', 115)
 

@@ -35,7 +35,7 @@
                             <img class="ticket-box-footer-element" src="{% if my_ticket.created_by__profile_image_url %}{{ my_ticket.created_by__profile_image_url }}{% endif %}" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
                             <div class="ticket-box-footer-element creation-details">
                                 <p>{{ my_ticket.created_by__first_name }} {{ my_ticket.created_by__last_name }}</p>
-                                {% if user.use_12_hour_time_format %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"h:i a" }}</p>{% else %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"H:i" }}</p>{% endif %}
+                                {% if user.use_12_hour_time_format %}<p>{{my_ticket.created_at|date:'j. F Y'}}, {{ my_ticket.created_at|time:"h:i a" }}</p>{% else %}<p>{{my_ticket.created_at|date:'j. F Y'}}, {{ my_ticket.created_at|time:"H:i" }}</p>{% endif %}
                             </div>
                             <div class="ticket-box-footer-element view-more-button">Details</div>
                         </div>
@@ -62,7 +62,7 @@
                         <img class="ticket-box-footer-element" src="{% if my_ticket.created_by__profile_image_url %}{{ my_ticket.created_by__profile_image_url }}{% endif %}" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
                         <div class="ticket-box-footer-element creation-details">
                             <p>{{ my_ticket.created_by__first_name }} {{ my_ticket.created_by__last_name }}</p>
-                            {% if user.use_12_hour_time_format %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"h:i a" }}</p>{% else %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"H:i" }}</p>{% endif %}
+                            {% if user.use_12_hour_time_format %}<p>{{my_ticket.created_at|date:'j. F Y'}}, {{ my_ticket.created_at|time:"h:i a" }}</p>{% else %}<p>{{my_ticket.created_at|date:'j. F Y'}}, {{ my_ticket.created_at|time:"H:i" }}</p>{% endif %}
                         </div>
                         <div class="ticket-box-footer-element view-more-button">Details</div>
                     </div>
@@ -91,13 +91,12 @@
                         <img class="ticket-box-footer-element" src="{% if my_ticket.created_by__profile_image_url %}{{ my_ticket.created_by__profile_image_url }}{% endif %}" onerror="this.src='{% static 'images/generic_user_icon.webp' %}'" alt="Profilbild" width="192" height="192">
                         <div class="ticket-box-footer-element creation-details">
                             <p>{{ my_ticket.created_by__first_name }} {{ my_ticket.created_by__last_name }}</p>
-                            {% if user.use_12_hour_time_format %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"h:i a" }}</p>{% else %}<p>{{my_ticket.last_change_at|date:'j. F Y'}}, {{ my_ticket.last_change_at|time:"H:i" }}</p>{% endif %}
+                            {% if user.use_12_hour_time_format %}<p>{{my_ticket.created_at|date:'j. F Y'}}, {{ my_ticket.created_at|time:"h:i a" }}</p>{% else %}<p>{{my_ticket.created_at|date:'j. F Y'}}, {{ my_ticket.created_at|time:"H:i" }}</p>{% endif %}
                         </div>
                         <div class="ticket-box-footer-element view-more-button">Details</div>
                     </div>
                 </div>
             {% endif %}
-            {% if forloop.last %}{{ forloop.counter }}{% endif %}
         {% endfor %}
     </div>
 {% else %}
