@@ -6,15 +6,16 @@
 
 
 
-- [Vorbereitung](#ueberschriften)
-- [Übersicht](#ueberischt)
-- [Räume](#raeume)
-- [Geräte](#geraete)
-- [Ticket-System](#ticketsystem)
-- [Account](#account)
-	- [Rollen](#anker-definieren)
-- [Features](#features)
---
+- Inventory Managment
+	- [Beschreibung des Projektes](#beschreibung)
+	- [Aufgabenverteilung](#aufgabenverteilung)
+	- [Gruppenmitglieder](#gruppenmitglieder)
+	- [Der aktuelle Stand](#aktuellerstand)
+	 	- [Grundfunktionen](#musthave)
+	 	- [Erweiterfunktionen](#advanced)
+	- [Was wurde umgesetzt?](#waswurdeumgesetzt)
+	- [Features](#features)
+
 
 <a name="vorbereitung"></a>
 ## Vorbereitung
@@ -31,5 +32,5 @@
 <a name="ticketsystem"></a>
 ## Ticketsystem
 
-<a name="ticketsystem"></a>
-## Ticketsystem
+<a name="account"></a>
+## Account
