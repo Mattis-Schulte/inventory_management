@@ -13,7 +13,6 @@
 	- [Der aktuelle Stand](#aktuellerstand)
 	 	- [Grundfunktionen](#musthave)
 	 	- [Erweitertefunktionen](#advanced)
-	- [Was wurde umgesetzt?](#waswurdeumgesetzt)
 	- [Besonderheiten](#besonderheiten)
 
 
@@ -67,13 +66,16 @@ Alle Grundfunktionen sind enthalten. Folgende wurden uns gestellt:
 ### Erweitertefunktionen
 Zahlreiche Erweiterungen für unser Projekt sind:
 - itslearning-Login (mit Übernahme von Rollen aus itslearning)
-- Große Rechteverwaltung
+- Rechteverwaltung (Gäste, Schüler, Mitarbeiter, Admin, System-Admin), (Wer kann Tickets hinzufügen | Rechte im Admin-Panel)
 - Authentifizierung
-
-
-<a name="waswurdeumgesetzt"></a>
-## Was wurde umgesetzt?
-Insgesamt wurde von unserer Seite aus alle Anforderungen und Implementationen eingebaut.
+- Daten-Export als CSV im Admin-Panel
+- Ticket-System
+- Darkmode
+- Asynchrones Laden
+- Innovatives und effektives Design
+- Fehler und falsche Benutzereingaben werden korrekt behandelt
+- Umfangreiche Filter
+- Responsive Webdesign
 
 <a name="besonderheiten"></a>
 ## Besonderheiten
