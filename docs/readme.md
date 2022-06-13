@@ -65,7 +65,7 @@ Alle Grundfunktionen sind enthalten. Folgende wurden uns gestellt:
 ### Erweitertefunktionen
 Zahlreiche Erweiterungen für unser Projekt sind:
 - itslearning-Login (mit Übernahme von Rollen aus itslearning)
-- Rechteverwaltung (Gäste, Schüler, Mitarbeiter, Admin, System-Admin), (Wer kann Tickets hinzufügen | Rechte im Admin-Panel)
+- Rechteverwaltung (Gäste, Schüler, Mitarbeiter, Admin, System-Admin), (Funktionsfähig: Wer kann Tickets hinzufügen, Rechte werden im Admin-Panel unter Gruppen eingestellt)
 - Authentifizierung
 - Daten-Export als CSV im Admin-Panel
 - Ticket-System
