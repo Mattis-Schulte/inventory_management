@@ -2,7 +2,7 @@
 
 
 
-
+![Django](https://cdn.discordapp.com/attachments/882442489330540624/984725449034850325/ikea-django-logo.png)
 
 
 
@@ -18,22 +18,21 @@
 
 <a name="beschreibung"></a>
 ## Beschreibung des Projektes
-Unser Projekt beinhalt ein Program welches als Inventarmanagment-Tool für die Schule benutzt werden kann. Dabei sind viele nützliche Dinge enthalten wie z.B der itslearning-Login, das ansprechende und effeziente Design, die Vertiefung von denn einzelnen Programmbestandteilen usw.
+Unser Projekt beinhalt ein Programm, welches als Inventarmanagment-Tool für die Schule benutzt werden kann. Dabei sind viele nützliche Dinge enthalten wie z.B der itslearning-Login, das ansprechende und effiziente Design, die Vertiefung von denn einzelnen Programmbestandteilen usw.
 
 <a name="aufgabenverteilung"></a>
 ## Aufgabenverteilung
-In unserem Fall hat sich einer um die Erstellung des Projektes, die Zeitplannung, die Dokumentation des Projektes und Überlegungen zu denn Datenmodellen gemacht. Die anderer Person hat sich um die Gestaltung der Website, die Implempentierung der einzelnen Bestandteile, Finalisierung der Datenmodellen usw. gekümmert. Viele Entscheidungen gingen dabei in Absprache mit dem anderen Gruppenmitglied weshalb man bei manchen Projektteilen keine klare Grenze ziehen kann.
-
+In unserem Fall hat sich einer um die Erstellung des Projektes, die Zeitplanung, die Dokumentation des Projektes und Überlegungen zu denn Datenmodellen gemacht. Das andere Gruppenmitglied hat sich um die Gestaltung der Website, die Implementierung der einzelnen Bestandteile, Finalisierung der Datenmodelle usw. gekümmert. Viele Entscheidungen gingen dabei in Absprache mit dem anderen Gruppenmitglied, weshalb man bei manchen Projektteilen keine klare Grenze ziehen kann.
 
 <a name="gruppenmitglieder"></a>
 ## Gruppenmitglieder
 Folgende Gruppenmitglieder waren am Projekt beteiligt:
-- Mattis Schulte (Umsetzung)
-- Sajan Sivapatham (Organisatorisch)
+- Mattis Schulte
+- Sajan Sivapatham
 
 <a name="aktuellerstand"></a>
 ## Der aktuelle Stand
-Der aktuelle Stand ist das die Grundgunktionen erfüllt sind und auch sowohl bei denn Erweitertenfunktionen auch viele Extras miteingeflossen sind.
+Der aktuelle Stand ist das die Grundfunktionen erfüllt sind und bei denn Erweiterungsfunktionen auch viele Extras miteingeflossen sind.
 
 <a name="musthave"></a>
 ### Grundfunktionen
@@ -79,5 +78,5 @@ Zahlreiche Erweiterungen für unser Projekt sind:
 
 <a name="besonderheiten"></a>
 ## Besonderheiten
-Um das Projekt zu starten muss man zuerst die `manage.py` Datei ausführen.
-Dabei sollte man zuerst vom Stammordner mit dem Befehl `cd intern_szut` zu unserem Programmordner wechseln um die `manage.py` Datei zu finden. Danach startet man die `manage.py` mit dem Befehl `python manage.py runserver --insecure`. Wenn man denn Bfehl eingegeben hat sollte sich ein Fenster im Browser öffnen in dem das Programm dann erscheint.
+Um das Projekt zu starten, muss man zuerst die `manage.py` Datei ausführen.
+Dabei sollte man zuerst vom Stammordner mit dem Befehl `cd intern_szut` zu unserem Programmordner wechseln, um die `manage.py` Datei zu finden. Danach startet man die `manage.py` mit dem Befehl `python manage.py runserver --insecure`. Wenn man denn Befehl eingegeben hat, sollte sich ein Fenster im Browser öffnen, in dem das Programm dann erscheint.
